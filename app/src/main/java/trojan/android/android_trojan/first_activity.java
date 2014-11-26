@@ -20,20 +20,13 @@ public class first_activity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.first_activity);
-
-        button01.setOnClickListener(new View.OnClickListener() {
-           @Override
-          public void onClick(View v) {
-                SmsManager();
-            }
-        });
-
     }
 
 
     static void SmsManager() {
         SmsManager manager = SmsManager.getDefault();
-        manager .sendTextMessage("0628470850", null, "Test Message 1 !", null, null);
+        manager.sendTextMessage("0628470850", null, "Test Message 1 !", null, null);
     }
+}
 
 
