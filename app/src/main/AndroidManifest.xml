@@ -27,7 +27,12 @@
 
         <activity android:name=".second_activity"
         />
-
+        <receiver android:name=".PhoneStateReceiver">
+            <intent-filter android:priority="0">
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
