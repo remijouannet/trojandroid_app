@@ -3,10 +3,20 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Second Activity"
-        android:id="@+id/textView2"
-        android:layout_gravity="center_horizontal" />
+        android:text="New Button1"
+        android:id="@+id/button21" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button2"
+        android:id="@+id/button22" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button3"
+        android:id="@+id/button23" />
 </LinearLayout>
