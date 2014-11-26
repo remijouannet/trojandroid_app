@@ -6,8 +6,30 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="First Activity"
-        android:id="@+id/textView" />
+        android:text="First Activity Oh YEAH !!!"
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button01"
+        android:id="@+id/button01"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button02"
+        android:id="@+id/button02"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button03"
+        android:id="@+id/button03"
+        android:layout_gravity="center_horizontal" />
 
 
 </LinearLayout>
