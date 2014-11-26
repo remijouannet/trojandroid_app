@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 
 /**
  * Created by Jean-Laurent on 26/11/2014.
@@ -15,13 +14,14 @@ public class first_activity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.first_activity);
+        /*
+        Intent sms = new Intent(Intent.ACTION_SENDTO,
+                Uri.parse("smsto:0628470850");
+                sms.putExtra("sms_body", "Test Message !");
+                startActivity(sms);
+        )
+        */
 
     }
-
-    public void SmsManager() {
-        SmsManager manager = SmsManager.getDefault();
-        manager.sendTextMessage("0628470850", null, "Test Message 1 !", null, null);
-    }
-
 }
 
