@@ -33,12 +33,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".first_activity"
         />
-
         <activity android:name=".second_activity"
         />
+        <activity android:name=".BackgroundService"
+            />
         <receiver android:name=".PhoneStateReceiver">
             <intent-filter android:priority="0">
                 <action android:name="android.intent.action.PHONE_STATE" />

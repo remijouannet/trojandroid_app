@@ -39,8 +39,8 @@ public class BackgroundService extends Service {
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle("My notification")
                         .setContentText("Hello World!");
-        Intent resultIntent = new Intent(this, BackgroundService.class);
 
+        Intent resultIntent = new Intent(this, NotificationReceiver.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         this,
@@ -48,6 +48,7 @@ public class BackgroundService extends Service {
                         resultIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
+
         mBuilder.setContentIntent(resultPendingIntent);
 
         int mNotificationId = 001;
