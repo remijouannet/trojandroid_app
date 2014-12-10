@@ -26,6 +26,8 @@ public class second_activity extends Activity {
     private Button button22;
     private Button button23;
     private Button button24;
+    private Button start_service;
+    private Button stop_service;
 
 
     @Override
@@ -36,6 +38,8 @@ public class second_activity extends Activity {
         button22 = (Button) findViewById(R.id.button22);
         button23 = (Button) findViewById(R.id.button23);
         button24 = (Button) findViewById(R.id.button24);
+        start_service = (Button) findViewById(R.id.start_service);
+        stop_service = (Button) findViewById(R.id.stop_service);
 
         button21.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +63,20 @@ public class second_activity extends Activity {
             @Override
             public void onClick(View v) {
                 ArrayList<String[]> calllog = (ArrayList<String[]>) getCallLog();
+            }
+        });
+
+        start_service.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                startService(new Intent(second_activity.this, BackgroundService.class));
+            }
+        });
+
+        stop_service.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                stopService(new Intent(second_activity.this, BackgroundService.class));
             }
         });
     }
