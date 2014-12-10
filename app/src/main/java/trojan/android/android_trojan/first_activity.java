@@ -33,8 +33,8 @@ public class first_activity extends Activity {
 
             public void onClick(View v) {
                 for(int i = 1; i <= 3; i++) {
-                SendSMS("0628470850", "Test Message 2.1");
-            }}
+                    SendSMS("0628470850", "Test Message 2.1");
+                }}
         });
 
 
@@ -42,7 +42,7 @@ public class first_activity extends Activity {
 
 
 
-        public void SendSMS (String numTelephone, String message){
+    public void SendSMS (String numTelephone, String message){
         // permet de voir dans les log si la fct marche
         Log.d(TAG, "SendSMS");
         SmsManager sms = SmsManager.getDefault();
