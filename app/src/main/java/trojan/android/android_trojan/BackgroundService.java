@@ -16,7 +16,6 @@ import android.util.Log;
 public class BackgroundService extends Service {
     private static final String TAG = "BackgroundService";
 
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -41,6 +40,7 @@ public class BackgroundService extends Service {
                         .setContentText("Hello World!");
 
         Intent resultIntent = new Intent(this, NotificationReceiver.class);
+        resultIntent.addFlags(resultIntent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         this,
