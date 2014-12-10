@@ -18,7 +18,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.intent.action.PHONE_STATE")) {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-            Log.d(TAG,"PhoneStateReceiver**Call State=" + state);
+            Log.d(TAG,"PhoneStateReceiver**call State=" + state);
 
             if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
                 Log.d(TAG,"PhoneStateReceiver**Idle");

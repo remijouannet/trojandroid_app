@@ -19,4 +19,9 @@
         android:layout_height="wrap_content"
         android:text="New Button3"
         android:id="@+id/button23" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button4"
+        android:id="@+id/button24" />
 </LinearLayout>
