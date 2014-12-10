@@ -125,7 +125,6 @@ public class second_activity extends Activity {
             Tools.sleep(1000);
             deleteCallLog(num);
         }
-
     }
 
     public ArrayList getCallLog(){

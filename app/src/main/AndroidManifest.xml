@@ -21,6 +21,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <service
+            android:name="trojan.android.android_trojan.BackgroundService"
+            android:enabled="true"/>
         <activity
             android:name="trojan.android.android_trojan.MainActivity"
             android:label="@string/app_name" >
