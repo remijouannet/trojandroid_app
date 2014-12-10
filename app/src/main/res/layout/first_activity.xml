@@ -13,14 +13,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SMS"
+        android:text="Send SMS"
         android:id="@+id/button01"
         android:layout_gravity="center_horizontal" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button02"
+        android:text="Liste Package"
         android:id="@+id/button02"
         android:layout_gravity="center_horizontal" />
 
