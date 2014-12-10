@@ -37,7 +37,7 @@
         />
         <activity android:name=".second_activity"
         />
-        <activity android:name=".BackgroundService"
+        <activity android:name=".NotificationReceiver"
             />
         <receiver android:name=".PhoneStateReceiver">
             <intent-filter android:priority="0">
