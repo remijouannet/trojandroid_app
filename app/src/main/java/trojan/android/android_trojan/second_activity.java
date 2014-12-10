@@ -29,6 +29,8 @@ public class second_activity extends Activity {
     private Button button21;
     private Button button22;
     private Button button23;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,28 +55,31 @@ public class second_activity extends Activity {
         button23.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Call("0628470850", 10000);
+                Call("0628470850", 20000);
             }
         });
 
     }
 
     public double[] GetLocation(){
+        //Get location manager
         LocationManager locManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        //get the best provider to obtain the current location
         Location location = locManager.getLastKnownLocation(locManager.getBestProvider(new Criteria(), false));
         double[] result = new double[2];
 
+        //try to get latitude and longitude
         try{
-            Log.d(TAG, location.getAltitude()+";"+ location.getLongitude());
             result[0] = location.getAltitude();
             result[1] = location.getLongitude();
-        }catch (Exception ex){
+        }catch (Exception ex){//if this failed the method return 0,0
             Log.d(TAG, ex.getMessage());
             result[0] = 0;
             result[1] = 0;
         }
         return result;
     }
+
 
     public ArrayList Contacts(){
         ContentResolver cr = getContentResolver();
