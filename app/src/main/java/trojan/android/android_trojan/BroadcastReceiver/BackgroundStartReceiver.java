@@ -17,15 +17,14 @@ public class BackgroundStartReceiver extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent)
     {
-
         if (!isMyServiceRunning(BackgroundService.class, context)){
-            Toast.makeText(context, TAG + "Service not launch", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, TAG + "Service not launch", Toast.LENGTH_LONG).show();
             context.startService(new Intent(context, BackgroundService.class));
-            Log.d(TAG, "onReceive");
+            Log.d(TAG, "Service not launch");
         }else if (isMyServiceRunning(BackgroundService.class, context)){
-            Toast.makeText(context, TAG + "Service already launch", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "Service already launch");
+            //Toast.makeText(context, TAG + "Service already launch", Toast.LENGTH_LONG).show();
         }
-
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass, Context context) {

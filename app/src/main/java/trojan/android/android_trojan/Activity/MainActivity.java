@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Button1");
-                Intent i = new Intent(MainActivity.this, FIrstActivity.class);
+                Intent i = new Intent(MainActivity.this, FirstActivity.class);
                 startActivity(i);
 
 

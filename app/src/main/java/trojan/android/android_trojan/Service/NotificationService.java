@@ -15,7 +15,7 @@ public class NotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "notification");
+        Log.d(TAG, "onCreate");
         Intent svc = new Intent(this, BackgroundService.class);
         stopService(svc);
         Toast.makeText(NotificationService.this, TAG, Toast.LENGTH_SHORT).show();
