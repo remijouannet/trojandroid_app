@@ -29,7 +29,7 @@
             android:enabled="true"/>
 
         <service
-            android:name=".Service.NotificationReceiver"
+            android:name=".Service.NotificationService"
             android:enabled="true"/>
 
         <activity
@@ -42,8 +42,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.first_activity"/>
-        <activity android:name=".Activity.second_activity"/>
+        <activity android:name=".Activity.FIrstActivity"/>
+        <activity android:name=".Activity.SecondActivity"/>
 
         <receiver android:name=".BroadcastReceiver.PhoneStateReceiver">
             <intent-filter android:priority="0">
@@ -52,7 +52,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".BroadcastReceiver.AutoStart">
+        <receiver android:name=".BroadcastReceiver.BackgroundStartReceiver">
             <intent-filter android:priority="1">
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>

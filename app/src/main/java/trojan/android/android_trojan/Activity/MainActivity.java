@@ -19,7 +19,6 @@ public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,12 +27,11 @@ public class MainActivity extends Activity {
         button2 = (Button) findViewById(R.id.b2);
 
 
-
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Button1");
-                Intent i = new Intent(MainActivity.this,first_activity.class);
+                Intent i = new Intent(MainActivity.this, FIrstActivity.class);
                 startActivity(i);
 
 
@@ -45,7 +43,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Button2");
-                Intent i = new Intent(MainActivity.this,second_activity.class);
+                Intent i = new Intent(MainActivity.this, SecondActivity.class);
                 startActivity(i);
 
 

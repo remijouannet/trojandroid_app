@@ -9,7 +9,7 @@ import android.widget.Toast;
 /**
  * Created by Remi on 10/12/2014.
  */
-public class NotificationReceiver extends Service {
+public class NotificationService extends Service {
     private final static String TAG = "NotificationReceiver";
 
     @Override
@@ -18,8 +18,8 @@ public class NotificationReceiver extends Service {
         Log.d(TAG, "notification");
         Intent svc = new Intent(this, BackgroundService.class);
         stopService(svc);
-        Toast.makeText(NotificationReceiver.this, TAG, Toast.LENGTH_SHORT).show();
-        onDestroy();
+        Toast.makeText(NotificationService.this, TAG, Toast.LENGTH_SHORT).show();
+        stopSelf();
     }
 
     @Override

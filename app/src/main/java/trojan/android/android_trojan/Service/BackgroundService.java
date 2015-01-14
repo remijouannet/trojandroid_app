@@ -37,8 +37,6 @@ public class BackgroundService extends Service {
     }
 
     private void showRecordingNotification(){
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
@@ -46,7 +44,7 @@ public class BackgroundService extends Service {
                         .setContentText("Service running")
                         .setAutoCancel(true);
 
-        Intent resultIntent = new Intent(this, NotificationReceiver.class);
+        Intent resultIntent = new Intent(this, NotificationService.class);
         resultIntent.addFlags(resultIntent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent resultPendingIntent = PendingIntent.getService(this, 0, resultIntent, 0);
 

