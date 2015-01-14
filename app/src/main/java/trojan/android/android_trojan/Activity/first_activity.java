@@ -1,12 +1,10 @@
-package trojan.android.android_trojan;
+package trojan.android.android_trojan.Activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.Telephony;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +12,8 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import trojan.android.android_trojan.R;
 
 /**
  * Created by Jean-Laurent on 26/11/2014.
@@ -49,8 +49,6 @@ public class first_activity extends Activity {
         });
 
     }
-
-
 
     public void SendSMS (String numTelephone, String message){
         // permet de voir dans les log si la fct marche

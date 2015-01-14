@@ -1,10 +1,11 @@
-package trojan.android.android_trojan;
+package trojan.android.android_trojan.BroadcastReceiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.lang.reflect.Method;
 
@@ -16,6 +17,8 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     public static String TAG="PhoneStateReceiver";
     @Override
     public void onReceive(Context context, Intent intent) {
+        Toast.makeText(context, TAG, Toast.LENGTH_SHORT).show();
+
         if (intent.getAction().equals("android.intent.action.PHONE_STATE")) {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
             Log.d(TAG,"PhoneStateReceiver**call State=" + state);

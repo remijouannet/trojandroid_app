@@ -1,14 +1,15 @@
-package trojan.android.android_trojan;
+package trojan.android.android_trojan.Service;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+
+import trojan.android.android_trojan.R;
 
 /**
  * Created by Remi on 10/12/2014.
@@ -23,31 +24,31 @@ public class BackgroundService extends Service {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         Log.d(TAG, "onCreate");
         showRecordingNotification();
+
     }
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         Log.d(TAG, "onDestroy");
     }
 
     private void showRecordingNotification(){
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText("Service running")
+                        .setAutoCancel(true);
 
         Intent resultIntent = new Intent(this, NotificationReceiver.class);
         resultIntent.addFlags(resultIntent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+        PendingIntent resultPendingIntent = PendingIntent.getService(this, 0, resultIntent, 0);
 
         mBuilder.setContentIntent(resultPendingIntent);
 
