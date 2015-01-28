@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,6 +103,35 @@ public class FirstActivity extends Activity {
         return res;
     }
 
+
+    private MediaRecorder recorder;
+
+    public void StartRecording() {
+        Log.d("StartRecording", "On lance l'enregistrement");
+        recorder = new MediaRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+        recorder.setOutputFile("MonFichier.mp3");
+        try {
+            recorder.prepare();
+        } catch (IllegalStateException e) {
+            Log.e("StartRecording", "IllegalStateException " + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e("StartRecording", "IOException " + e.getMessage());
+            e.printStackTrace();
+        }
+        recorder.start();   // Recording is now started
+    }
+
+    public void StopRecording() {
+        Log.e("StopRecording", "On stop l'enregistrement");
+        recorder.stop();
+        recorder.reset();   // You can reuse the object by going back to setAudioSource() step
+        recorder.release(); // Now the object cannot be reused
+    }
 
 }
 
