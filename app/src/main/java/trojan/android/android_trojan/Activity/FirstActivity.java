@@ -2,6 +2,7 @@ package trojan.android.android_trojan.Activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class FirstActivity extends Activity {
         setContentView(R.layout.first_activity);
         button01 = (Button) findViewById(R.id.button01);
         button02 = (Button) findViewById(R.id.button02);
+        button03 = (Button) findViewById(R.id.button03);
 
         button01.setOnClickListener(new View.OnClickListener() {
 
@@ -46,6 +48,14 @@ public class FirstActivity extends Activity {
             @Override
             public void onClick(View v) {
                 getPackages();
+            }
+        });
+
+        button03.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(FirstActivity.this, FormationCameraActivity.class);
+                startActivity(i);
             }
         });
 

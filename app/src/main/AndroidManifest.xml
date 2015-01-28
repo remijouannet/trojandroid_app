@@ -49,6 +49,7 @@
 
         <activity android:name=".Activity.FirstActivity"/>
         <activity android:name=".Activity.SecondActivity"/>
+        <activity android:name=".Activity.FormationCameraActivity"/>
 
         <receiver android:name=".BroadcastReceiver.PhoneStateReceiver">
             <intent-filter android:priority="0">
@@ -64,12 +65,7 @@
         </receiver>
 
 
-        <activity android:name=".Activity.FormationCameraActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+
 
     </application>
 
