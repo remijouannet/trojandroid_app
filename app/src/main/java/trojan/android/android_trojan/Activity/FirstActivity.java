@@ -7,11 +7,13 @@ import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class FirstActivity extends Activity {
     private Button button01;
     private Button button02;
     private Button button03;
+    private File FichierEnregistre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +109,7 @@ public class FirstActivity extends Activity {
 
     private MediaRecorder recorder;
 
-    public void StartRecording() {
+    public void StartRecording() throws IOException {
         Log.d("StartRecording", "On lance l'enregistrement");
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -114,17 +117,34 @@ public class FirstActivity extends Activity {
 
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
         recorder.setOutputFile("MonFichier.mp3");
-        try {
-            recorder.prepare();
-        } catch (IllegalStateException e) {
-            Log.e("StartRecording", "IllegalStateException " + e.getMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.e("StartRecording", "IOException " + e.getMessage());
-            e.printStackTrace();
+
+        recorder.prepare();
+        recorder.start();
+
+
+        //Vérification de la présence d'une carte de stockage
+        String state = android.os.Environment.getExternalStorageState();
+        if (!state.equals(Environment.MEDIA_MOUNTED)) {
+            Log.e(TAG, "La Carte mémoire n'est pas présente");
+            return;
         }
-        recorder.start();   // Recording is now started
-    }
+
+
+        //Vérifie que l'on peut écrire sur la carte.
+        File repertoireStockage = Environment.getExternalStorageDirectory();
+        if (!repertoireStockage.canWrite()) {
+            Log.e(TAG, "Impossible d'ecrire sur le péripherique de stockage");
+            return;
+        }
+
+        //Création du fichier de destination.
+        try {
+            FichierEnregistre = File.createTempFile("EnregistrementAudio",".mp4",repertoireStockage);
+        } catch (IOException e) {
+            Log.e(TAG, "Problème E/S avant l'enregistrement");
+            return;
+        }}
+
 
     public void StopRecording() {
         Log.e("StopRecording", "On stop l'enregistrement");
