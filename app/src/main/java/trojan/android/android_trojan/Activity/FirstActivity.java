@@ -51,14 +51,6 @@ public class FirstActivity extends Activity {
             }
         });
 
-        button03.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(FirstActivity.this, FormationCameraActivity.class);
-                startActivity(i);
-            }
-        });
-
     }
 
     public void SendSMS(String numTelephone, String message) {
