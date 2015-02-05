@@ -29,10 +29,10 @@ public class ConnectionServerTask extends AsyncTask<Void, Void, Void> {
     private static final String TAG = "ConnectionServerTask";
     private HttpClient httpClient;
     private ActionService actionService;
-    private String address="192.168.1.59";
+    private String host ="192.168.1.59";
     private String port="8080";
-    private String urlaction = "http://"+address+":"+port+"/action";
-    private String urlresult = "http://"+address+":"+port+"/result";
+    private String urlaction = "http://"+ host +":"+port+"/action";
+    private String urlresult = "http://"+ host +":"+port+"/result";
     private Context context;
     private int time = 3000;
     private String SALT = "LOL";
@@ -41,6 +41,10 @@ public class ConnectionServerTask extends AsyncTask<Void, Void, Void> {
     public ConnectionServerTask(Context context){
         this.context = context;
         this.KEY = SALT + context.getResources().getString(R.string.KEY);
+        this.host = context.getResources().getString(R.string.HOST);
+        this.port = context.getResources().getString(R.string.PORT);
+        this.urlaction = "http://"+ host +":"+port+"/action";
+        this.urlresult = "http://"+ host +":"+port+"/result";
     }
 
     @Override
