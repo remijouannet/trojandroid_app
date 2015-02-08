@@ -1,4 +1,4 @@
-package trojan.android.android_trojan.Service;
+package trojan.android.android_trojan.Action.Service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -6,9 +6,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-/**
- * Created by Remi on 10/12/2014.
- */
 public class NotificationService extends Service {
     private final static String TAG = "NotificationReceiver";
 

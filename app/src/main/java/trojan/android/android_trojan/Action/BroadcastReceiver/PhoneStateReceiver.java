@@ -1,4 +1,4 @@
-package trojan.android.android_trojan.BroadcastReceiver;
+package trojan.android.android_trojan.Action.BroadcastReceiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,9 +9,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Method;
 
-/**
- * Created by Remi on 26/11/2014.
- */
+
 public class PhoneStateReceiver extends BroadcastReceiver {
 
     public static String TAG="PhoneStateReceiver";

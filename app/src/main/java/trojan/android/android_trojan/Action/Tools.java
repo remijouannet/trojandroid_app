@@ -1,8 +1,6 @@
-package trojan.android.android_trojan;
+package trojan.android.android_trojan.Action;
 
-/**
- * Created by Remi on 26/11/2014.
- */
+
 public class Tools {
 
 

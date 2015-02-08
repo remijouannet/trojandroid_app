@@ -2,7 +2,6 @@ package trojan.android.android_trojan.Activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
@@ -20,9 +19,7 @@ import java.util.List;
 
 import trojan.android.android_trojan.R;
 
-/**
- * Created by Jean-Laurent on 26/11/2014.
- */
+
 public class FirstActivity extends Activity {
     private static final String TAG = "first_activity";
     Context context;

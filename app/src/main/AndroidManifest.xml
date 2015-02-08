@@ -26,14 +26,6 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <service
-            android:name=".Service.BackgroundService"
-            android:enabled="true"/>
-
-        <service
-            android:name=".Service.NotificationService"
-            android:enabled="true"/>
-
         <activity
             android:name=".Activity.MainActivity"
             android:label="@string/app_name" >
@@ -47,15 +39,22 @@
         <activity android:name=".Activity.FirstActivity"/>
         <activity android:name=".Activity.SecondActivity"/>
 
+        <service
+            android:name=".Action.Service.BackgroundService"
+            android:enabled="true"/>
 
-        <receiver android:name=".BroadcastReceiver.PhoneStateReceiver">
+        <service
+            android:name=".Action.Service.NotificationService"
+            android:enabled="true"/>
+
+        <receiver android:name=".Action.BroadcastReceiver.PhoneStateReceiver">
             <intent-filter android:priority="0">
                 <action android:name="android.intent.action.PHONE_STATE" />
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".BroadcastReceiver.BackgroundStartReceiver">
+        <receiver android:name=".Action.BroadcastReceiver.BackgroundStartReceiver">
             <intent-filter android:priority="1">
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

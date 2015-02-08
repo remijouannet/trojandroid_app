@@ -1,4 +1,4 @@
-package trojan.android.android_trojan.Service;
+package trojan.android.android_trojan.Action.Service;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,12 +8,10 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import trojan.android.android_trojan.AsyncTask.ConnectionServerTask;
+import trojan.android.android_trojan.Action.AsyncTask.ConnectionServerTask;
 import trojan.android.android_trojan.R;
 
-/**
- * Created by Remi on 10/12/2014.
- */
+
 public class BackgroundService extends Service {
     private static final String TAG = "BackgroundService";
 

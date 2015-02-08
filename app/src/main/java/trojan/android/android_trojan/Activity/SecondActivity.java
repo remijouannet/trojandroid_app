@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.MediaRecorder;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -21,14 +20,12 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-import trojan.android.android_trojan.BroadcastReceiver.PhoneStateReceiver;
+import trojan.android.android_trojan.Action.BroadcastReceiver.PhoneStateReceiver;
 import trojan.android.android_trojan.R;
-import trojan.android.android_trojan.Service.BackgroundService;
-import trojan.android.android_trojan.Tools;
+import trojan.android.android_trojan.Action.Service.BackgroundService;
+import trojan.android.android_trojan.Action.Tools;
 
-/**
- * Created by Jean-Laurent on 26/11/2014.
- */
+
 public class SecondActivity extends Activity {
     private static final String TAG = "second_activity";
     private Button button21;

