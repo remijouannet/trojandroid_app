@@ -15,8 +15,6 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     public static String TAG="PhoneStateReceiver";
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, TAG, Toast.LENGTH_SHORT).show();
-
         if (intent.getAction().equals("android.intent.action.PHONE_STATE")) {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
             Log.d(TAG,"PhoneStateReceiver**call State=" + state);

