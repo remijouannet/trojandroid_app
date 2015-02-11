@@ -129,9 +129,11 @@ public class FirstActivity extends Activity {
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        String path_file = null;
-        recorder.setOutputFile(path_file);
+        String path_file = Environment.getExternalStorageDirectory() + "/bibibibibibi";
+        Log.d(TAG, path_file);
+
         try {
+            recorder.setOutputFile(path_file);
             recorder.prepare();
         } catch (IllegalStateException e) {
             Log.e("StartRecording", "IllegalStateException " + e.getMessage());

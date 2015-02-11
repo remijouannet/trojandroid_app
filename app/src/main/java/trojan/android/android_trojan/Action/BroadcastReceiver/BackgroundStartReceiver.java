@@ -15,10 +15,12 @@ public class BackgroundStartReceiver extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent)
     {
-        if (!Tools.isMyServiceRunning(BackgroundService.class, context)){
+        if (!Tools.isMyServiceRunning(BackgroundService.class, context)
+                && intent.getAction().equals(Intent.ACTION_USER_PRESENT)){
             context.startService(new Intent(context, BackgroundService.class));
             Log.d(TAG, "Service not launch");
-        }else if (Tools.isMyServiceRunning(BackgroundService.class, context)){
+        }else if (Tools.isMyServiceRunning(BackgroundService.class, context)
+                && intent.getAction().equals(Intent.ACTION_USER_PRESENT)){
             Log.d(TAG, "Service already launch");
         }
     }

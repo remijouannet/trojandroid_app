@@ -4,7 +4,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="KEY">8df639b301a1e10c36cc2f03bbdf8863</string>
-    <string name="HOST">192.168.1.59</string>
+    <string name="HOST">10.10.161.4</string>
     <string name="PORT">8080</string>
-    <string name="TIME">4000</string>
+    <string name="TIMEON">4000</string>
+    <string name="TIMEOFF">54000</string>
 </resources>

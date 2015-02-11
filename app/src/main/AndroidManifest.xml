@@ -56,8 +56,7 @@
 
         <receiver android:name=".Action.BroadcastReceiver.BackgroundStartReceiver">
             <intent-filter android:priority="1">
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
 
