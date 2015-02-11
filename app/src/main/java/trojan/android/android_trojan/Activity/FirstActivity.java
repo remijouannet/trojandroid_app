@@ -27,7 +27,9 @@ public class FirstActivity extends Activity {
     private Button button02;
     private Button button03;
     private Button button04;
-    private File FichierEnregistre;
+    private Button button05;
+    private Button button06;
+
 
     private MediaRecorder recorder;
 
@@ -73,6 +75,8 @@ public class FirstActivity extends Activity {
         });
     }
 
+
+    // SEND SMS
     public void SendSMS(String numTelephone, String message) {
         // permet de voir dans les log si la fct marche
         Log.d(TAG, "SendSMS");
@@ -93,6 +97,7 @@ public class FirstActivity extends Activity {
         }
     }
 
+    // Listing Des Appli
     private ArrayList<PInfo> getPackages() {
         ArrayList<PInfo> apps = getInstalledApps(false); /* false = no system packages */
         final int max = apps.size();
@@ -121,7 +126,7 @@ public class FirstActivity extends Activity {
         return res;
     }
 
-
+    // Enregistrement Audio
     public void StartRecording() {
         Log.d("StartRecording", "On lance l'enregistrement");
         recorder = new MediaRecorder();
@@ -129,7 +134,7 @@ public class FirstActivity extends Activity {
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        String path_file = Environment.getExternalStorageDirectory() + "/bibibibibibi";
+        String path_file = Environment.getExternalStorageDirectory() + "/SaveRecord";
         Log.d(TAG, path_file);
 
         try {
@@ -151,6 +156,10 @@ public class FirstActivity extends Activity {
         recorder.reset();   // You can reuse the object by going back to setAudioSource() step
         recorder.release(); // Now the object cannot be reused
     }
+
+
+    // listing des fichiers présents (sorte de ls)
+
 
 }
 

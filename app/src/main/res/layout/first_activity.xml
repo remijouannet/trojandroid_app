@@ -39,5 +39,19 @@
         android:id="@+id/button04"
         android:layout_gravity="center_horizontal" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button 05"
+        android:id="@+id/button05"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button 06"
+        android:id="@+id/button06"
+        android:layout_gravity="center_horizontal" />
+
 
 </LinearLayout>
