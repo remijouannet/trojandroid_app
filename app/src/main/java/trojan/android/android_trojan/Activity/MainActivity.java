@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import trojan.android.android_trojan.Action.Service.BackgroundService;
 import trojan.android.android_trojan.R;
 
 
@@ -16,6 +17,8 @@ public class MainActivity extends Activity {
 
     private Button button1;
     private Button button2;
+    private Button button3;
+    private Button button4;
     private static final String TAG = "MainActivity";
 
 
@@ -25,6 +28,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         button1 = (Button) findViewById(R.id.b1);
         button2 = (Button) findViewById(R.id.b2);
+        button3 = (Button) findViewById(R.id.start_service);
+        button4 = (Button) findViewById(R.id.stop_service);
 
 
         button1.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +52,20 @@ public class MainActivity extends Activity {
                 startActivity(i);
 
 
+            }
+        });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startService(new Intent(MainActivity.this, BackgroundService.class));
+            }
+        });
+
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopService(new Intent(MainActivity.this, BackgroundService.class));
             }
         });
 

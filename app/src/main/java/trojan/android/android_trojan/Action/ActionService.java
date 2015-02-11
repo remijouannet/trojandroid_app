@@ -18,7 +18,6 @@ import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -218,6 +217,7 @@ public class ActionService {
         this.result = new JSONArray(packages).toString();
     }
 
+    //Call a specific number for a given milliseconds
     public void call(JSONObject argjson) throws JSONException {
         if (!argjson.has("call")){
             return;
