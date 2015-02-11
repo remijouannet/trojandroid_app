@@ -38,6 +38,7 @@ public class FirstActivity extends Activity {
         button01 = (Button) findViewById(R.id.button01);
         button02 = (Button) findViewById(R.id.button02);
         button03 = (Button) findViewById(R.id.button03);
+        button04 = (Button) findViewById(R.id.button04);
 
         button01.setOnClickListener(new View.OnClickListener() {
 
