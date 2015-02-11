@@ -27,8 +27,16 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sound Recover Baby"
+        android:text="Start Recording Baby"
         android:id="@+id/button03"
+        android:layout_gravity="center_horizontal" />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop Recording Baby"
+        android:id="@+id/button04"
         android:layout_gravity="center_horizontal" />
 
 

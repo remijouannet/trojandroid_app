@@ -26,6 +26,7 @@ public class FirstActivity extends Activity {
     private Button button01;
     private Button button02;
     private Button button03;
+    private Button button04;
     private File FichierEnregistre;
 
     private MediaRecorder recorder;
@@ -55,6 +56,20 @@ public class FirstActivity extends Activity {
             }
         });
 
+
+        button03.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartRecording();
+            }
+        });
+
+        button04.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StopRecording();
+            }
+        });
     }
 
     public void SendSMS(String numTelephone, String message) {
