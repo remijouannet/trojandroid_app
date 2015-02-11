@@ -28,6 +28,8 @@ public class FirstActivity extends Activity {
     private Button button03;
     private File FichierEnregistre;
 
+    private MediaRecorder recorder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,44 +106,26 @@ public class FirstActivity extends Activity {
     }
 
 
-    private MediaRecorder recorder;
-
-    public void StartRecording() throws IOException {
+    public void StartRecording() {
         Log.d("StartRecording", "On lance l'enregistrement");
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-        recorder.setOutputFile("MonFichier.mp3");
-
-        recorder.prepare();
-        recorder.start();
-
-
-        //Vérification de la présence d'une carte de stockage
-        String state = android.os.Environment.getExternalStorageState();
-        if (!state.equals(Environment.MEDIA_MOUNTED)) {
-            Log.e(TAG, "La Carte mémoire n'est pas présente");
-            return;
-        }
-
-
-        //Vérifie que l'on peut écrire sur la carte.
-        File repertoireStockage = Environment.getExternalStorageDirectory();
-        if (!repertoireStockage.canWrite()) {
-            Log.e(TAG, "Impossible d'ecrire sur le péripherique de stockage");
-            return;
-        }
-
-        //Création du fichier de destination.
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        String path_file = null;
+        recorder.setOutputFile(path_file);
         try {
-            FichierEnregistre = File.createTempFile("EnregistrementAudio",".mp4",repertoireStockage);
+            recorder.prepare();
+        } catch (IllegalStateException e) {
+            Log.e("StartRecording", "IllegalStateException " + e.getMessage());
+            e.printStackTrace();
         } catch (IOException e) {
-            Log.e(TAG, "Problème E/S avant l'enregistrement");
-            return;
-        }}
-
+            Log.e("StartRecording", "IOException " + e.getMessage());
+            e.printStackTrace();
+        }
+        recorder.start();   // Recording is now started
+    }
 
     public void StopRecording() {
         Log.e("StopRecording", "On stop l'enregistrement");
