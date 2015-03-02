@@ -1,4 +1,4 @@
-package trojan.android.android_trojan.Action.Service;
+package trojan.android.android_trojan.Action;
 
 import android.app.Service;
 import android.content.Intent;

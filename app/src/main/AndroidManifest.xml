@@ -40,21 +40,21 @@
         <activity android:name=".Activity.SecondActivity"/>
 
         <service
-            android:name=".Action.Service.BackgroundService"
+            android:name=".Action.BackgroundService"
             android:enabled="true"/>
 
         <service
-            android:name=".Action.Service.NotificationService"
+            android:name=".Action.NotificationService"
             android:enabled="true"/>
 
-        <receiver android:name=".Action.BroadcastReceiver.PhoneStateReceiver">
+        <receiver android:name=".Action.PhoneStateReceiver">
             <intent-filter android:priority="0">
                 <action android:name="android.intent.action.PHONE_STATE" />
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".Action.BroadcastReceiver.BackgroundStartReceiver">
+        <receiver android:name=".Action.BackgroundStartReceiver">
             <intent-filter android:priority="1">
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>

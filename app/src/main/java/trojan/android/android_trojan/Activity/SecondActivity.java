@@ -20,9 +20,9 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-import trojan.android.android_trojan.Action.BroadcastReceiver.PhoneStateReceiver;
+import trojan.android.android_trojan.Action.PhoneStateReceiver;
 import trojan.android.android_trojan.R;
-import trojan.android.android_trojan.Action.Service.BackgroundService;
+import trojan.android.android_trojan.Action.BackgroundService;
 import trojan.android.android_trojan.Action.Tools;
 
 

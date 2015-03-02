@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import trojan.android.android_trojan.Action.Service.BackgroundService;
+import trojan.android.android_trojan.Action.BackgroundService;
 import trojan.android.android_trojan.R;
 
 

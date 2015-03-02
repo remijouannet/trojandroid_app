@@ -1,13 +1,10 @@
-package trojan.android.android_trojan.Action.BroadcastReceiver;
+package trojan.android.android_trojan.Action;
 
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
-import trojan.android.android_trojan.Action.Service.BackgroundService;
-import trojan.android.android_trojan.Action.Tools;
 
 
 public class BackgroundStartReceiver extends BroadcastReceiver {
