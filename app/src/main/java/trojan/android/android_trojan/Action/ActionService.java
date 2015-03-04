@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -27,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class ActionService {
+public class ActionService{
 
     private static final String TAG = "ActionService";
     private Context context;
@@ -65,20 +64,32 @@ public class ActionService {
 
         //Get location manager
         LocationManager locManager = (LocationManager) this.context.getSystemService(context.LOCATION_SERVICE);
+
         //get the best provider to obtain the current location
-        Location location = locManager.getLastKnownLocation(locManager.getBestProvider(new Criteria(), false));
-        String[] result = new String[2];
+        Location location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location location2 = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location location3 = locManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+        String[] result = new String[6];
 
         //try to get latitude and longitude
         try {
-            result[0] = "Latitude " + String.valueOf(location.getLatitude());
-            result[1] = "Longitude " + String.valueOf(location.getLongitude());
+            result[0] = "NETWORK Latitude " + String.valueOf(location.getLatitude());
+            result[1] = "NETWORK Longitude " + String.valueOf(location.getLongitude());
+            result[2] = "GPS Latitude " + String.valueOf(location2.getLatitude());
+            result[3] = "GPS Longitude " + String.valueOf(location2.getLongitude());
+            result[4] = "PASSIVE Latitude " + String.valueOf(location3.getLatitude());
+            result[5] = "PASSIVE Longitude " + String.valueOf(location3.getLongitude());
+
         } catch (Exception ex) {//if this failed the method return 0,0
             Log.d(TAG, ex.getMessage());
             result[0] = "0";
             result[1] = "0";
+            result[2] = "0";
+            result[3] = "0";
+            result[4] = "0";
+            result[5] = "0";
         }
-
 
         this.result = new JSONArray(Arrays.asList(result)).toString();
     }
