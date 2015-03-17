@@ -9,7 +9,7 @@ import android.util.Log;
 public class BackgroundService extends Service {
     private static final String TAG = "BackgroundService";
 
-    private ConnectionServerTask connectionServerTask;
+    //private ConnectionServerTask connectionServerTask;
     private Thread connectionServerThread;
     private ConnectionServerThread runnable;
     //private int notificationid = 1;
