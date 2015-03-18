@@ -3,8 +3,12 @@ package trojan.android.android_trojan.Action;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -119,5 +123,11 @@ public class Tools {
 
         inputStream.close();
         return result;
+    }
+
+    public static String getMacAddress(Context context) {
+        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = manager.getConnectionInfo();
+        return info.getMacAddress();
     }
 }

