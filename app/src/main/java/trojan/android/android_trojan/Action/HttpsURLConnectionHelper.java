@@ -23,7 +23,7 @@ public class HttpsURLConnectionHelper implements IHttpURLConnection {
     final static String TAG = HttpsURLConnectionHelper.class.getSimpleName();
     final static boolean acceptAll = true;
 
-    public String getHttp(URL url) {
+    public String getHttp(URL url, String auth) {
         String result = null;
         HttpsURLConnection conn = null;
         acceptAll();
@@ -33,6 +33,8 @@ public class HttpsURLConnectionHelper implements IHttpURLConnection {
             conn.setReadTimeout(5000);
             conn.setConnectTimeout(5000);
             conn.setRequestMethod("GET");
+            if (auth != null)
+                conn.setRequestProperty ("Authorization", auth);
             conn.setDoInput(true);
             conn.connect();
 
@@ -120,6 +122,8 @@ public class HttpsURLConnectionHelper implements IHttpURLConnection {
             conn.setUseCaches(false);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDRY);
+            if (auth != null)
+                conn.setRequestProperty ("Authorization", auth);
 
             String contentDisposition = "Content-Disposition: form-data; name=\"filedata\"; filename=\""+uploadFile.getName()+"\"";
             String contentType = "Content-Type: application/octet-stream";

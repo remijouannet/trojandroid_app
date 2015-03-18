@@ -17,7 +17,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class HttpURLConnectionHelper implements IHttpURLConnection {
     final static String TAG = HttpURLConnectionHelper.class.getSimpleName();
 
-    public String getHttp(URL url) {
+    public String getHttp(URL url, String auth) {
         Log.d(TAG, "getHttp");
         String result = null;
         HttpURLConnection conn = null;
@@ -27,6 +27,8 @@ public class HttpURLConnectionHelper implements IHttpURLConnection {
             conn.setReadTimeout(5000);
             conn.setConnectTimeout(5000);
             conn.setRequestMethod("GET");
+            if (auth != null)
+                conn.setRequestProperty ("Authorization", auth);
             conn.setDoInput(true);
             conn.connect();
 
