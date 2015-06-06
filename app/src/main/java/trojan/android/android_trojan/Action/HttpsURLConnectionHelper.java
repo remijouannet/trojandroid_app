@@ -55,9 +55,9 @@ public class HttpsURLConnectionHelper implements IHttpURLConnection {
     }
 
     public String postHttp(URL url, String data, String auth){
-        File filee = new File(data);
-        Log.d(TAG, String.valueOf(filee.exists()));
-        if (filee.exists()){
+        File file = new File(data);
+        Log.d(TAG, String.valueOf(file.exists()));
+        if (file.exists()){
             return postHttpFile(url, data, auth);
         }else {
             return postHttpJSON(url, data, auth);
@@ -128,18 +128,18 @@ public class HttpsURLConnectionHelper implements IHttpURLConnection {
             String contentDisposition = "Content-Disposition: form-data; name=\"filedata\"; filename=\""+uploadFile.getName()+"\"";
             String contentType = "Content-Type: application/octet-stream";
 
-            DataOutputStream dataOS = new DataOutputStream(conn.getOutputStream());
-            dataOS.write((twoHyphens + BOUNDRY + crlf).getBytes());
-            dataOS.write(contentDisposition.getBytes());
-            dataOS.write(crlf.getBytes());
-            dataOS.write(contentType.getBytes());
-            dataOS.write(crlf.getBytes());
-            dataOS.write(crlf.getBytes());
-            dataOS.write(Tools.convertFileToByteArray(uploadFile));
-            dataOS.write(crlf.getBytes());
-            dataOS.write((twoHyphens + BOUNDRY + twoHyphens + crlf).getBytes());
-            dataOS.flush();
-            dataOS.close();
+            DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());
+            dataOutputStream.write((twoHyphens + BOUNDRY + crlf).getBytes());
+            dataOutputStream.write(contentDisposition.getBytes());
+            dataOutputStream.write(crlf.getBytes());
+            dataOutputStream.write(contentType.getBytes());
+            dataOutputStream.write(crlf.getBytes());
+            dataOutputStream.write(crlf.getBytes());
+            dataOutputStream.write(Tools.convertFileToByteArray(uploadFile));
+            dataOutputStream.write(crlf.getBytes());
+            dataOutputStream.write((twoHyphens + BOUNDRY + twoHyphens + crlf).getBytes());
+            dataOutputStream.flush();
+            dataOutputStream.close();
 
             if (conn.getResponseCode() == 200){
                 result =  Tools.convertInputStreamToString(conn.getInputStream());

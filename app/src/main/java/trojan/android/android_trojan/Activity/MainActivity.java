@@ -15,8 +15,6 @@ import trojan.android.android_trojan.R;
 
 public class MainActivity extends Activity {
 
-    private Button button1;
-    private Button button2;
     private Button button3;
     private Button button4;
     private static final String TAG = "MainActivity";
@@ -26,34 +24,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        button1 = (Button) findViewById(R.id.b1);
-        button2 = (Button) findViewById(R.id.b2);
         button3 = (Button) findViewById(R.id.start_service);
         button4 = (Button) findViewById(R.id.stop_service);
-
-
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Button1");
-                Intent i = new Intent(MainActivity.this, FirstActivity.class);
-                startActivity(i);
-
-
-            }
-        });
-
-
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Button2");
-                Intent i = new Intent(MainActivity.this, SecondActivity.class);
-                startActivity(i);
-
-
-            }
-        });
 
         button3.setOnClickListener(new View.OnClickListener() {
             @Override

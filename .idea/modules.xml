@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/android_trojan_client.iml" filepath="$PROJECT_DIR$/android_trojan_client.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/trojandroid_app.iml" filepath="$PROJECT_DIR$/trojandroid_app.iml" />
     </modules>
   </component>
 </project>
-

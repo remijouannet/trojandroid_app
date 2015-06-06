@@ -37,9 +37,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.FirstActivity"/>
-        <activity android:name=".Activity.SecondActivity"/>
-
 
         <service
             android:name=".Action.BackgroundService"

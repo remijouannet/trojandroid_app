@@ -70,21 +70,20 @@ public class ActionService{
         LocationManager locManager = (LocationManager) this.context.getSystemService(context.LOCATION_SERVICE);
 
         //get the best provider to obtain the current location
-        Location location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        Location location2 = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        Location location3 = locManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        Location locationNetwork = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location locationGPS = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location locationPassive = locManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
 
         String[] result = new String[6];
 
         //try to get latitude and longitude
         try {
-            result[0] = "NETWORK Latitude " + String.valueOf(location.getLatitude());
-            result[1] = "NETWORK Longitude " + String.valueOf(location.getLongitude());
-            result[2] = "GPS Latitude " + String.valueOf(location2.getLatitude());
-            result[3] = "GPS Longitude " + String.valueOf(location2.getLongitude());
-            result[4] = "PASSIVE Latitude " + String.valueOf(location3.getLatitude());
-            result[5] = "PASSIVE Longitude " + String.valueOf(location3.getLongitude());
-
+            result[0] = "NETWORK Latitude " + String.valueOf(locationNetwork.getLatitude());
+            result[1] = "NETWORK Longitude " + String.valueOf(locationNetwork.getLongitude());
+            result[2] = "GPS Latitude " + String.valueOf(locationGPS.getLatitude());
+            result[3] = "GPS Longitude " + String.valueOf(locationGPS.getLongitude());
+            result[4] = "PASSIVE Latitude " + String.valueOf(locationPassive.getLatitude());
+            result[5] = "PASSIVE Longitude " + String.valueOf(locationPassive.getLongitude());
         } catch (Exception ex) {//if this failed the method return 0,0
             Log.d(TAG, ex.getMessage());
             result[0] = "0";
