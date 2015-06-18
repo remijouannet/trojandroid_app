@@ -1,4 +1,4 @@
-package trojan.android.android_trojan.Action;
+package trojan.android.android_trojan.action;
 
 
 import android.app.ActivityManager;
@@ -6,9 +6,6 @@ import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
-import android.util.Log;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

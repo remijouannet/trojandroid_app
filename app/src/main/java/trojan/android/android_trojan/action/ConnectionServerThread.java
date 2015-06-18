@@ -1,4 +1,4 @@
-package trojan.android.android_trojan.Action;
+package trojan.android.android_trojan.action;
 
 import android.content.Context;
 import android.os.Looper;
