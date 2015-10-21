@@ -2,7 +2,7 @@ An Android Trojan
 ==
 
 I'm gonna describe a little project I made, "**trojandroid**",
-the first part of this project was to make a simple trojan app, to get information from the phone or to perform certain remote action with the phone (send sms ...).
+the first part of this project was to make a simple trojan app, to get information from the phone or to perform some remote action with the phone (send sms ...).
 the second part was to inject this trojan into another app package (APK), so the trojan can be quietly install without the user noticing, the example I will take here will be with the package of [get10](https://github.com/remijouannet/get10).
 
 this project is available on Github, three repo are parts of this project :
